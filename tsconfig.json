@@ -1,5 +1,6 @@
 {
   "exclude": [
+    "lib",
     "tests",
   ],
   "compilerOptions": {
@@ -7,9 +8,9 @@
     "target": "es5",
     "module": "commonjs",
     "lib": ["esnext"],
-    "outDir": "./lib#/common",
+    "outDir": "./lib/common",
     "rootDir": "./src",
-    "tsBuildInfoFile": "./lib#/common/tsconfig.tsbuildinfo",
+    "tsBuildInfoFile": "./lib/common/tsconfig.tsbuildinfo",
     "downlevelIteration": true,
     "isolatedModules": true,
     "strict": true,

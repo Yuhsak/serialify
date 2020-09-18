@@ -1,6 +1,6 @@
 {
   "name": "serialify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Object serializer for node.js",
   "main": "lib/common/index.js",
   "module": "lib/esm/index.js",
@@ -16,7 +16,8 @@
     "clean": "rm -rf lib",
     "test": "jest",
     "build": "npm run clean && tsc -b tsconfig.json tsconfig.esm.json",
-    "build:watch": "npm run build -- --watch"
+    "build:watch": "npm run build -- --watch",
+    "prepublishOnly": "npm run build"
   },
   "author": "Yuhsak Inoue",
   "license": "MIT",
