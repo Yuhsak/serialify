@@ -1,8 +1,11 @@
 {
   "name": "serialify",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Object serializer for node.js",
-  "homepage": "https://github.com/Yuhsak/serialify",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yuhsak/serialify"
+  },
   "main": "lib/common/index.js",
   "module": "lib/esm/index.js",
   "types": "lib/esm/index.d.ts",
