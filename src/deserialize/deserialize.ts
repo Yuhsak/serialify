@@ -161,4 +161,4 @@ export const deserialize: DeserializeFn = (obj: any, {dangerouslyDeserializeFunc
 
 }
 
-export const parse = (obj: string, {dangerouslyDeserializeFunction = false}: DeserializeOption = {}) => deserialize(JSON.parse(obj), {dangerouslyDeserializeFunction})
+export const parse = (obj: string, {dangerouslyDeserializeFunction = false}: DeserializeOption = {}): any => deserialize(JSON.parse(obj), {dangerouslyDeserializeFunction})
