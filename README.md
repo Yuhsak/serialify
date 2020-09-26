@@ -241,6 +241,32 @@ const d = deserialize(s)
  **/
 ```
 
+### Parse
+
+`parse()` to deserialize jsonString created by `stringify()`.
+
+```ts
+import {stringify, parse} from 'serialify'
+
+const jsonString = stringify({
+  String: 'John',
+  Number: 28,
+  Set: new Set([0, 1, 2, 3]),
+  Date: new Date()
+})
+
+parse(jsonString)
+
+/**
+ * {
+ *  String: 'John',
+ *  Number: 28,
+ *  Set: Set([0, 1, 2, 3]),
+ *  Date: Date(1600392736750),
+ * }
+ **/
+```
+
 **Deserializing Function object**
 
 Sometimes it cloud be dangerous to deserializing a Function object because `eval()` will be called at that time.
@@ -280,32 +306,6 @@ deserialize(s, {dangerouslyDeserializeFunction: true})
  * {
  *  name: 'John',
  *  fn: function() {return 'OK'}
- * }
- **/
-```
-
-### Parse
-
-`parse()` to deserialize jsonString created by `stringify()`.
-
-```ts
-import {stringify, parse} from 'serialify'
-
-const jsonString = stringify({
-  String: 'John',
-  Number: 28,
-  Set: new Set([0, 1, 2, 3]),
-  Date: new Date()
-})
-
-parse(jsonString)
-
-/**
- * {
- *  String: 'John',
- *  Number: 28,
- *  Set: Set([0, 1, 2, 3]),
- *  Date: Date(1600392736750),
  * }
  **/
 ```
