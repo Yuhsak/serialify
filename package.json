@@ -1,7 +1,7 @@
 {
   "name": "serialify",
-  "version": "0.2.2",
-  "description": "Object serializer for node.js",
+  "version": "0.2.3",
+  "description": "Object serializer/deserializer for node.js written with TypeScript",
   "repository": {
     "type": "git",
     "url": "https://github.com/Yuhsak/serialify"
