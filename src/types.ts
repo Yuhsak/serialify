@@ -3,15 +3,17 @@ export type Serialized<T, V> = {
   __value: V
 }
 
+export type SerializedString = string
+export type SerializedBoolean = boolean
+export type SerializedNumber = Serialized<'Number', 'infinity'> | Serialized<'Number', 'nan'> | number
 export type SerializedUndefined = Serialized<'Undefined', 'undefined'>
 export type SerializedNull = null
-export type SerializedNumber = Serialized<'Number', 'infinity'> | Serialized<'Number', 'nan'> | number
 export type SerializedSymbol = Serialized<'Symbol', string>
 export type SerializedBigInt = Serialized<'BigInt', string>
 export type SerializedRegExp = Serialized<'RegExp',{source: string, flags: string}>
 export type SerializedDate = Serialized<'Date', number>
-export type SerializedMap = Serialized<'Map', [any, any][]>
-export type SerializedSet = Serialized<'Set', any[]>
+export type SerializedMap<K=any, V=any> = Serialized<'Map', [K, V][]>
+export type SerializedSet<V=any> = Serialized<'Set', V[]>
 export type SerializedFunction = Serialized<'Function', string>
 export type SerializedArray = any[]
 export type SerializedArrayBuffer = Serialized<'ArrayBuffer', number[]>

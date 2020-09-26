@@ -5,14 +5,20 @@ import {
 const context = (0,eval)('this')
 
 export const is = {
-  Undefined: (obj: any): obj is undefined => {
-    return obj === void(0)
+  String: (obj: any): obj is string => {
+    return typeof obj === 'string'
   },
-  Null: (obj: any): obj is null => {
-    return obj === null
+  Boolean: (obj: any): obj is boolean => {
+    return typeof obj === 'boolean'
   },
   Number: (obj: any): obj is number => {
     return typeof obj === 'number'
+  },
+  Undefined: (obj: any): obj is undefined => {
+    return obj === void (0)
+  },
+  Null: (obj: any): obj is null => {
+    return obj === null
   },
   Symbol: (obj: any): obj is symbol => {
     return typeof obj === 'symbol'
@@ -103,3 +109,5 @@ export const is = {
       )
   }
 }
+
+export const isKeys = Object.keys(is) as (keyof typeof is)[]
