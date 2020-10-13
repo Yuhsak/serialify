@@ -1,10 +1,16 @@
 {
   "name": "serialify",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Object serializer/deserializer for node.js written with TypeScript",
+  "author": {
+    "name": "Yuhsak Inoue",
+    "email": "yuhsak.inoue@gmail.com",
+    "url": "https://github.com/Yuhsak"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Yuhsak/serialify"
+    "url": "https://github.com/Yuhsak/serialify.git"
   },
   "main": "lib/common/index.js",
   "module": "lib/esm/index.js",
@@ -24,8 +30,6 @@
     "start": "npm run build:watch",
     "prepublishOnly": "npm run build"
   },
-  "author": "Yuhsak Inoue",
-  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.1",
