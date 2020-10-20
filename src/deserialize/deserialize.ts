@@ -1,10 +1,7 @@
 import {
   is,
+  what,
 } from '../is'
-
-import {
-  fromEntries,
-} from '../util'
 
 import type * as S from '../types'
 
@@ -99,7 +96,11 @@ export const deserializer = {
     return new BigUint64Array(obj.__v.map(v => BigInt(v)))
   },
   Object: (obj: S.SerializedObject): any => {
-    return fromEntries(Object.entries(obj).map(([k, v]) => [k, deserializeRecursive(v)]))
+    const o: Record<any, any> = {}
+    for (const k in obj) {
+      o[k] = deserializeRecursive(obj[k])
+    }
+    return o
   }
 }
 
@@ -114,10 +115,11 @@ export const deserializeRecursive: DeserializeRecursiveFn = (obj: any): any => {
   const type = obj.__t as keyof typeof deserializer
 
   if (!type || !deserializer[type]) {
-    if (is.Array(obj)) {
+    const t = what(obj)
+    if (t === 'Array') {
       return deserializer.Array(obj)
     }
-    if (is.Object(obj)) {
+    if (t === 'Object') {
       return deserializer.Object(obj)
     }
     return obj

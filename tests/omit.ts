@@ -1,4 +1,4 @@
-import {omit} from '../src'
+import {omit} from '../src/omit'
 
 import type * as S from '../src/types'
 

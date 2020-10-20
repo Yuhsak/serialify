@@ -1,12 +1,6 @@
 import {
-  is,
-  isKeys,
   what,
 } from '../is'
-
-import {
-  fromEntries,
-} from '../util'
 
 import type * as S from '../types'
 
@@ -101,7 +95,11 @@ export const serializer = {
     return {__t: 'BigUint64Array', __v: [...obj].map(v => v.toString())}
   },
   Object: (obj: any): S.SerializedObject => {
-    return fromEntries(Object.entries(obj).map(([k, v]) => [k, serializeRecursive(v)]))
+    const o: Record<any, any> = {}
+    for (const k in obj) {
+      o[k] = serializeRecursive(obj[k])
+    }
+    return o
   }
 }
 
