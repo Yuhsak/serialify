@@ -59,7 +59,11 @@ export const serializer = {
     return {__t: 'ArrayBuffer', __v: [...Buffer.from(obj)]}
   },
   Buffer: (obj: Buffer): S.SerializedBuffer => {
-    return {__t: 'Buffer', __v: [...obj]}
+    const __v: number[] = []
+    for (const v of obj) {
+      v !== void(0) && __v.push(v)
+    }
+    return {__t: 'Buffer', __v}
   },
   Int8Array: (obj: Int8Array): S.SerializedInt8Array => {
     return {__t: 'Int8Array', __v: [...obj]}
