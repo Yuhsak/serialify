@@ -6,11 +6,6 @@ import {
   fromEntries,
 } from '../util'
 
-import {
-  omit,
-  OmitBySerializedEntity,
-} from '../omit'
-
 import type * as S from '../types'
 
 import {
@@ -26,10 +21,10 @@ export const deserializer = {
   },
   Number: (obj: S.SerializedNumber) => {
     if (is.Number(obj)) return obj
-    if (obj.__value === 'infinity') {
+    if (obj.__v === 'infinity') {
       return Infinity
     }
-    if (obj.__value === 'nan') {
+    if (obj.__v === 'nan') {
       return NaN
     }
     return obj
@@ -41,67 +36,67 @@ export const deserializer = {
     return null
   },
   Symbol: (obj: S.SerializedSymbol) => {
-    return Symbol(obj.__value)
+    return Symbol(obj.__v)
   },
   BigInt: (obj: S.SerializedBigInt) => {
-    return BigInt(obj.__value)
+    return BigInt(obj.__v)
   },
   RegExp: (obj: S.SerializedRegExp) => {
-    return new RegExp(obj.__value.source, obj.__value.flags)
+    return new RegExp(obj.__v.source, obj.__v.flags)
   },
   Date: (obj: S.SerializedDate) => {
-    return new Date(obj.__value)
+    return new Date(obj.__v)
   },
   Map: (obj: S.SerializedMap) => {
-    return new Map(obj.__value.map(([k, v]) => [k, deserializeRecursive(v)]))
+    return new Map(obj.__v.map(([k, v]) => [k, deserializeRecursive(v)]))
   },
   Set: (obj: S.SerializedSet) => {
-    return new Set(obj.__value.map(v => deserializeRecursive(v)))
+    return new Set(obj.__v.map(v => deserializeRecursive(v)))
   },
   Function: (obj: S.SerializedFunction) => {
-    return eval(`(${obj.__value})`)
+    return eval(`(${obj.__v})`)
   },
   Array: (obj: S.SerializedArray) => {
     return obj.map(v => deserializeRecursive(v))
   },
   ArrayBuffer: (obj: S.SerializedArrayBuffer) => {
-    return new Uint8Array(obj.__value).buffer
+    return new Uint8Array(obj.__v).buffer
   },
   Buffer: (obj: S.SerializedBuffer) => {
-    return Buffer.from(obj.__value)
+    return Buffer.from(obj.__v)
   },
   Int8Array: (obj: S.SerializedInt8Array) => {
-    return new Int8Array(obj.__value)
+    return new Int8Array(obj.__v)
   },
   Uint8Array: (obj: S.SerializedUint8Array) => {
-    return new Uint8Array(obj.__value)
+    return new Uint8Array(obj.__v)
   },
   Uint8ClampedArray: (obj: S.SerializedUint8ClampedArray) => {
-    return new Uint8ClampedArray(obj.__value)
+    return new Uint8ClampedArray(obj.__v)
   },
   Int16Array: (obj: S.SerializedInt16Array) => {
-    return new Int16Array(obj.__value)
+    return new Int16Array(obj.__v)
   },
   Uint16Array: (obj: S.SerializedUint16Array) => {
-    return new Uint16Array(obj.__value)
+    return new Uint16Array(obj.__v)
   },
   Int32Array: (obj: S.SerializedInt32Array) => {
-    return new Int32Array(obj.__value)
+    return new Int32Array(obj.__v)
   },
   Uint32Array: (obj: S.SerializedUint32Array) => {
-    return new Uint32Array(obj.__value)
+    return new Uint32Array(obj.__v)
   },
   Float32Array: (obj: S.SerializedFloat32Array) => {
-    return new Float32Array(obj.__value)
+    return new Float32Array(obj.__v)
   },
   Float64Array: (obj: S.SerializedFloat64Array) => {
-    return new Float64Array(obj.__value)
+    return new Float64Array(obj.__v)
   },
   BigInt64Array: (obj: S.SerializedBigInt64Array) => {
-    return new BigInt64Array(obj.__value.map(v => BigInt(v)))
+    return new BigInt64Array(obj.__v.map(v => BigInt(v)))
   },
   BigUint64Array: (obj: S.SerializedBigUint64Array) => {
-    return new BigUint64Array(obj.__value.map(v => BigInt(v)))
+    return new BigUint64Array(obj.__v.map(v => BigInt(v)))
   },
   Object: (obj: S.SerializedObject): any => {
     return fromEntries(Object.entries(obj).map(([k, v]) => [k, deserializeRecursive(v)]))
@@ -114,13 +109,12 @@ type DeserializeRecursiveFn = {
 
 export const deserializeRecursive: DeserializeRecursiveFn = (obj: any): any => {
 
-  if (!obj) {
-    return obj
-  }
+  if (!obj) return obj
+  if (!obj._t) return obj
 
-  const type = obj.__type as keyof typeof deserializer
+  const type = obj.__t as keyof typeof deserializer
 
-  if (!type || !deserializer[type]) {
+  if (!deserializer[type]) {
     if (is.Array(obj)) {
       return deserializer.Array(obj)
     }
@@ -145,20 +139,12 @@ export type DeserializeOption = {
 
 type DeserializeFn = {
   <T>(obj: T): Deserialize<T>
-  <T>(obj: T, opt: {dangerouslyDeserializeFunction: true}): Deserialize<T>
-  <T>(obj: T, opt: {dangerouslyDeserializeFunction: false}): Deserialize<OmitBySerializedEntity<T, S.SerializedFunction>> extends infer U ? U : never
-  <T>(obj: T, opt: DeserializeOption): Deserialize<T> | Deserialize<OmitBySerializedEntity<T, S.SerializedFunction>> extends infer U ? U : never
 }
 
-export const deserialize: DeserializeFn = (obj: any, {dangerouslyDeserializeFunction = false}: DeserializeOption = {}): any => {
+export const deserialize: DeserializeFn = (obj: any): any => {
 
-  if (obj?.__type === 'Function' && !dangerouslyDeserializeFunction) {
-    return void (0)
-  }
-
-  const o = !dangerouslyDeserializeFunction ? omit(obj, 'Function') : obj
-  return deserializeRecursive(o)
+  return deserializeRecursive(obj)
 
 }
 
-export const parse = (obj: string, {dangerouslyDeserializeFunction = false}: DeserializeOption = {}): any => deserialize(JSON.parse(obj), {dangerouslyDeserializeFunction})
+export const parse = (obj: string): any => deserialize(JSON.parse(obj))

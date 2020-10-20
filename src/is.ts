@@ -4,6 +4,44 @@ import {
 
 const context = (0,eval)('this')
 
+export const what = (obj: any) => {
+
+  if (obj === null) return 'Null'
+
+  const t = typeof obj
+  if (t === 'string') return 'String'
+  if (t === 'number') return 'Number'
+  if (t === 'boolean') return 'Boolean'
+  if (t === 'undefined') return 'Undefined'
+  if (t === 'bigint') return 'BigInt'
+  if (t === 'symbol') return 'Symbol'
+  if (t === 'function') return 'Function'
+
+  const s = toString(obj)
+  if (s === '[object RegExp]') return 'RegExp'
+  if (s === '[object Date]') return 'Date'
+  if (s === '[object Map]') return 'Map'
+  if (s === '[object Set]') return 'Set'
+  if (s === '[object Array]') return 'Array'
+  if (s === '[object ArrayBuffer]') return 'ArrayBuffer'
+  // Must handle Buffer before Uint8Array because Buffer has '[object Uint8Array]' for its string representation
+  if (!!(context.Buffer && context.Buffer.isBuffer?.(obj))) return 'Buffer'
+  if (s === '[object Int8Array]') return 'Int8Array'
+  if (s === '[object Uint8Array]') return 'Uint8Array'
+  if (s === '[object Uint8ClampedArray]') return 'Uint8ClampedArray'
+  if (s === '[object Int16Array]') return 'Int16Array'
+  if (s === '[object Uint16Array]') return 'Uint16Array'
+  if (s === '[object Int32Array]') return 'Int32Array'
+  if (s === '[object Uint32Array]') return 'Uint32Array'
+  if (s === '[object Float32Array]') return 'Float32Array'
+  if (s === '[object Float64Array]') return 'Float64Array'
+  if (s === '[object BigInt64Array]') return 'BigInt64Array'
+  if (s === '[object BigUint64Array]') return 'BigUint64Array'
+
+  if (t === 'object') return 'Object'
+
+}
+
 export const is = {
   String: (obj: any): obj is string => {
     return typeof obj === 'string'

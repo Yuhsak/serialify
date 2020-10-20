@@ -1,6 +1,6 @@
 export type Serialized<T, V> = {
-  __type: T
-  __value: V
+  __t: T
+  __v: V
 }
 
 export type SerializedString = string
