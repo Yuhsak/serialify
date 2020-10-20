@@ -50,9 +50,9 @@ export const deserializer = {
   Set: (obj: S.SerializedSet) => {
     return new Set(obj.__v.map(v => deserializeRecursive(v)))
   },
-  Function: (obj: S.SerializedFunction) => {
-    return eval(`(${obj.__v})`)
-  },
+  // Function: (obj: S.SerializedFunction) => {
+  //   return eval(`(${obj.__v})`)
+  // },
   Array: (obj: S.SerializedArray) => {
     return obj.map(v => deserializeRecursive(v))
   },

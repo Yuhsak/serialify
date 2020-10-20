@@ -8,6 +8,18 @@ import type {
   Serialize,
 } from './types'
 
+function spread(obj: Buffer | S.TypedArray): number[]
+function spread(obj: S.TypedBigIntArray): string[]
+function spread(obj: Buffer | S.TypedArray | S.TypedBigIntArray) {
+  const type = what(obj)
+  const arr = []
+  let i = 0
+  while (i < obj.length) {
+    arr.push((type === 'BigInt64Array' || type === 'BigUint64Array') ? obj[i++].toString() : obj[i++])
+  }
+  return arr
+}
+
 export const serializer = {
   String: (obj: string): S.SerializedString => {
     return obj
@@ -56,47 +68,43 @@ export const serializer = {
     return obj.map(v => serializeRecursive(v))
   },
   ArrayBuffer: (obj: ArrayBuffer): S.SerializedArrayBuffer => {
-    return {__t: 'ArrayBuffer', __v: [...Buffer.from(obj)]}
+    return {__t: 'ArrayBuffer', __v: spread(Buffer.from(obj))}
   },
   Buffer: (obj: Buffer): S.SerializedBuffer => {
-    const __v: number[] = []
-    for (const v of obj) {
-      v !== void(0) && __v.push(v)
-    }
-    return {__t: 'Buffer', __v}
+    return {__t: 'Buffer', __v: spread(obj)}
   },
   Int8Array: (obj: Int8Array): S.SerializedInt8Array => {
-    return {__t: 'Int8Array', __v: [...obj]}
+    return {__t: 'Int8Array', __v: spread(obj)}
   },
   Uint8Array: (obj: Uint8Array): S.SerializedUint8Array => {
-    return {__t: 'Uint8Array', __v: [...obj]}
+    return {__t: 'Uint8Array', __v: spread(obj)}
   },
   Uint8ClampedArray: (obj: Uint8ClampedArray): S.SerializedUint8ClampedArray => {
-    return {__t: 'Uint8ClampedArray', __v: [...obj]}
+    return {__t: 'Uint8ClampedArray', __v: spread(obj)}
   },
   Int16Array: (obj: Int16Array): S.SerializedInt16Array => {
-    return {__t: 'Int16Array', __v: [...obj]}
+    return {__t: 'Int16Array', __v: spread(obj)}
   },
   Uint16Array: (obj: Uint16Array): S.SerializedUint16Array => {
-    return {__t: 'Uint16Array', __v: [...obj]}
+    return {__t: 'Uint16Array', __v: spread(obj)}
   },
   Int32Array: (obj: Int32Array): S.SerializedInt32Array => {
-    return {__t: 'Int32Array', __v: [...obj]}
+    return {__t: 'Int32Array', __v: spread(obj)}
   },
   Uint32Array: (obj: Uint32Array): S.SerializedUint32Array => {
-    return {__t: 'Uint32Array', __v: [...obj]}
+    return {__t: 'Uint32Array', __v: spread(obj)}
   },
   Float32Array: (obj: Float32Array): S.SerializedFloat32Array => {
-    return {__t: 'Float32Array', __v: [...obj]}
+    return {__t: 'Float32Array', __v: spread(obj)}
   },
   Float64Array: (obj: Float64Array): S.SerializedFloat64Array => {
-    return {__t: 'Float64Array', __v: [...obj]}
+    return {__t: 'Float64Array', __v: spread(obj)}
   },
   BigInt64Array: (obj: BigInt64Array): S.SerializedBigInt64Array => {
-    return {__t: 'BigInt64Array', __v: [...obj].map(v => v.toString())}
+    return {__t: 'BigInt64Array', __v: spread(obj)}
   },
   BigUint64Array: (obj: BigUint64Array): S.SerializedBigUint64Array => {
-    return {__t: 'BigUint64Array', __v: [...obj].map(v => v.toString())}
+    return {__t: 'BigUint64Array', __v: spread(obj)}
   },
   Object: (obj: any): S.SerializedObject => {
     const o: Record<any, any> = {}

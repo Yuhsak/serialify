@@ -3,6 +3,9 @@ export type Serialized<T, V> = {
   __v: V
 }
 
+export type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array
+export type TypedBigIntArray = BigInt64Array | BigUint64Array
+
 export type SerializedString = string
 export type SerializedBoolean = boolean
 export type SerializedNumber = Serialized<'Number', 'infinity'> | Serialized<'Number', 'nan'> | number
