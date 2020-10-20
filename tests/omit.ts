@@ -2,7 +2,7 @@ import {omit} from '../src'
 
 import type * as S from '../src/types'
 
-const fn = {__type: 'Function', __value: '() => {}'} as const
+const fn = {__t: 'Function', __v: '() => {}'} as const
 
 describe('omit', () => {
 
@@ -86,21 +86,21 @@ describe('omit', () => {
   describe('set', () => {
 
     test('nothing happen', () => {
-      const set = {__type: 'Set', __value: [{__type: 'Number', __value: 0}]} as const
+      const set = {__t: 'Set', __v: [{__t: 'Number', __v: 0}]} as const
       const r = omit(set, 'Function')
       expect(r).toStrictEqual(set)
     })
 
     test('flat', () => {
-      const set = {__type: 'Set', __value: [{__type: 'Number', __value: 0}]} as const
-      const setWithFn = {__type: 'Set', __value: [{__type: 'Number', __value: 0}, fn]} as const
+      const set = {__t: 'Set', __v: [{__t: 'Number', __v: 0}]} as const
+      const setWithFn = {__t: 'Set', __v: [{__t: 'Number', __v: 0}, fn]} as const
       const r = omit(setWithFn, 'Function')
       expect(r).toStrictEqual(set)
     })
 
     test('nest', () => {
-      const set = {__type: 'Set', __value: [{__type: 'Set', __value: [{__type: 'Set', __value: []}]}]} as const
-      const setWithFn = {__type: 'Set', __value: [{__type: 'Set', __value: [{__type: 'Set', __value: [fn]}]}]} as const
+      const set = {__t: 'Set', __v: [{__t: 'Set', __v: [{__t: 'Set', __v: []}]}]} as const
+      const setWithFn = {__t: 'Set', __v: [{__t: 'Set', __v: [{__t: 'Set', __v: [fn]}]}]} as const
       const r = omit(setWithFn, 'Function')
       expect(r).toStrictEqual(set)
     })
@@ -110,21 +110,21 @@ describe('omit', () => {
   describe('map', () => {
 
     test('nothing happen', () => {
-      const map = {__type: 'Map', __value: [['a', {__type: 'String', __value: 'a'}]]} as const
+      const map = {__t: 'Map', __v: [['a', {__t: 'String', __v: 'a'}]]} as const
       const r = omit(map, 'Function')
       expect(r).toStrictEqual(map)
     })
 
     test('flat', () => {
-      const map = {__type: 'Map', __value: []} as const
-      const mapWithFn = {__type: 'Map', __value: [['a', fn]]} as const
+      const map = {__t: 'Map', __v: []} as const
+      const mapWithFn = {__t: 'Map', __v: [['a', fn]]} as const
       const r = omit(mapWithFn, 'Function')
       expect(r).toStrictEqual(map)
     })
 
     test('nest', () => {
-      const map = {__type: 'Map', __value: [['a', {__type: 'Map', __value: []}]]} as const
-      const mapWithFn: S.SerializedMap<string, S.SerializedMap<string, S.SerializedFunction>> = {__type: 'Map', __value: [['a', {__type: 'Map', __value: [['a', fn]]}]]}
+      const map = {__t: 'Map', __v: [['a', {__t: 'Map', __v: []}]]} as const
+      const mapWithFn: S.SerializedMap<string, S.SerializedMap<string, S.SerializedFunction>> = {__t: 'Map', __v: [['a', {__t: 'Map', __v: [['a', fn]]}]]}
       const r = omit(mapWithFn, 'Function')
       expect(r).toStrictEqual(map)
     })

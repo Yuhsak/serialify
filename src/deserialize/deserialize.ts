@@ -110,11 +110,10 @@ type DeserializeRecursiveFn = {
 export const deserializeRecursive: DeserializeRecursiveFn = (obj: any): any => {
 
   if (!obj) return obj
-  if (!obj._t) return obj
 
   const type = obj.__t as keyof typeof deserializer
 
-  if (!deserializer[type]) {
+  if (!type || !deserializer[type]) {
     if (is.Array(obj)) {
       return deserializer.Array(obj)
     }

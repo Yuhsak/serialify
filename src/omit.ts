@@ -20,13 +20,13 @@ export const omit: OmitFn = (obj: any, type: any): any => {
 
   if (!obj) return obj
 
-  if ((obj as any)?.__type === 'Map') {
-    const value = (obj as any)?.__value
+  if ((obj as any)?.__t === 'Map') {
+    const value = (obj as any)?.__v
     if (value && is.Array(value)) {
       return {
-        __type: 'Map', __value: value.filter(([, v]: [string, any]) => {
+        __t: 'Map', __v: value.filter(([, v]: [string, any]) => {
           try {
-            return v?.__type !== type
+            return v?.__t !== type
           } catch (e) {
             return true
           }
@@ -39,7 +39,7 @@ export const omit: OmitFn = (obj: any, type: any): any => {
   if (is.Array(obj)) {
     return obj.filter(v => {
       try {
-        return v.__type !== type
+        return v.__t !== type
       } catch (e) {
         return true
       }
@@ -49,7 +49,7 @@ export const omit: OmitFn = (obj: any, type: any): any => {
   if (is.Object(obj)) {
     return fromEntries(Object.entries(obj).filter(([, v]) => {
       try {
-        return (v as any).__type !== type
+        return (v as any).__t !== type
       } catch (e) {
         return true
       }

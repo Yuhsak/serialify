@@ -35,7 +35,7 @@ describe('serialize', () => {
 
     test('Undefined', () => {
       const result = serialize<undefined>(void(0))
-      expect(serialize(void (0))).toStrictEqual({__type: 'Undefined', __value: 'undefined'})
+      expect(serialize(void (0))).toStrictEqual({__t: 'Undefined', __v: 'undefined'})
     })
 
     test('Array<number>', () => {
@@ -50,53 +50,47 @@ describe('serialize', () => {
 
     test('Infinity', () => {
       const result: T.SerializedNumber = serialize(Infinity)
-      expect(result).toStrictEqual({__type: 'Number', __value: 'infinity'})
+      expect(result).toStrictEqual({__t: 'Number', __v: 'infinity'})
     })
 
     test('NaN', () => {
       const result: T.SerializedNumber = serialize(NaN)
-      expect(result).toStrictEqual({__type: 'Number', __value: 'nan'})
+      expect(result).toStrictEqual({__t: 'Number', __v: 'nan'})
     })
 
     test('RegExp', () => {
       const result: T.SerializedRegExp = serialize(/\([abc\(].*?/gi)
-      expect(result).toStrictEqual({__type: 'RegExp', __value: {source: '\\([abc\\(].*?', flags: 'gi'}})
+      expect(result).toStrictEqual({__t: 'RegExp', __v: {source: '\\([abc\\(].*?', flags: 'gi'}})
     })
 
     test('BigInt', () => {
       const result: T.SerializedBigInt = serialize(BigInt('2'))
-      expect(result).toStrictEqual({__type: 'BigInt', __value: '2'})
+      expect(result).toStrictEqual({__t: 'BigInt', __v: '2'})
     })
 
     test('Symbol', () => {
       const result: T.SerializedSymbol = serialize(Symbol('test'))
-      expect(result).toStrictEqual({__type: 'Symbol', __value: 'test'})
+      expect(result).toStrictEqual({__t: 'Symbol', __v: 'test'})
     })
 
     test('Map', () => {
       const result: T.Serialized<'Map', [string, T.SerializedNumber][]> = serialize(new Map([['a', 1], ['b', 2]]))
-      expect(result).toStrictEqual({__type: 'Map', __value: [['a', 1], ['b', 2]]})
+      expect(result).toStrictEqual({__t: 'Map', __v: [['a', 1], ['b', 2]]})
     })
 
     test('Set', () => {
       const result: T.Serialized<'Set', T.SerializedNumber[]> = serialize(new Set([0, 1, 2]))
-      expect(result).toStrictEqual({__type: 'Set', __value: [0,1,2]})
-    })
-
-    test('Function', () => {
-      const f = function () {}
-      const result: T.SerializedFunction = serialize(f)
-      expect(result).toStrictEqual({__type: 'Function', __value: f.toString()})
+      expect(result).toStrictEqual({__t: 'Set', __v: [0,1,2]})
     })
 
     test('Buffer', () => {
       const result: T.SerializedBuffer = serialize(Buffer.from('abc'))
-      expect(result).toStrictEqual({__type: 'Buffer', __value: [97, 98, 99]})
+      expect(result).toStrictEqual({__t: 'Buffer', __v: [97, 98, 99]})
     })
 
     test('ArrayBuffer', () => {
       const result: T.SerializedArrayBuffer = serialize(new Uint8Array([0, 1, 2, 3]).buffer)
-      expect(result).toStrictEqual({__type: 'ArrayBuffer', __value: [0, 1, 2, 3]})
+      expect(result).toStrictEqual({__t: 'ArrayBuffer', __v: [0, 1, 2, 3]})
     })
 
   })
@@ -124,8 +118,8 @@ describe('serialize', () => {
       const result = serialize(arr)
 
       expect(result).toStrictEqual([
-        {__type: 'Number', __value: 'nan'},
-        {__type: 'Number', __value: 'infinity'},
+        {__t: 'Number', __v: 'nan'},
+        {__t: 'Number', __v: 'infinity'},
         's',
         1,
         2,
@@ -134,7 +128,7 @@ describe('serialize', () => {
           false,
           {
             a: true,
-            b: {__type: 'BigInt', __value: '2'}
+            b: {__t: 'BigInt', __v: '2'}
           }
         ]
       ])
@@ -164,137 +158,22 @@ describe('serialize', () => {
 
       expect(result).toStrictEqual({
         bool: true,
-        set: {__type: 'Set', __value: [true]},
+        set: {__t: 'Set', __v: [true]},
         map: {
-          __type: 'Map',
-          __value: [
+          __t: 'Map',
+          __v: [
             ['a', true],
-            ['b', {__type: 'Set', __value: [
-              {__type: 'Map', __value: [
-                ['c', [0, 1, {__type: 'Undefined', __value: 'undefined'}]],
-                ['d', {__type: 'Map', __value: [
+            ['b', {__t: 'Set', __v: [
+              {__t: 'Map', __v: [
+                ['c', [0, 1, {__t: 'Undefined', __v: 'undefined'}]],
+                ['d', {__t: 'Map', __v: [
                   ['e', 10],
-                  ['f', {__type: 'Set', __value: ['g']}]
+                  ['f', {__t: 'Set', __v: ['g']}]
                 ]}]
               ]}
             ]}]
           ]
         }
-      })
-
-    })
-
-  })
-
-  describe('ignore', () => {
-
-    describe('true', () => {
-
-      test('function', () => {
-        const result: never = serialize(() => {}, {ignoreFunction: true})
-        expect(result).toBe(undefined)
-      })
-
-      test('function in object', () => {
-
-        const obj = {
-          a: 'a',
-          b: () => {}
-        }
-
-        const result: {a: T.SerializedString, b: never} = serialize(obj, {ignoreFunction: true})
-
-        expect(result).toStrictEqual({
-          a: 'a'
-        })
-
-      })
-
-      test('function in array', () => {
-
-        const obj = [() => {}, 0]
-
-        const result: T.SerializedNumber[] = serialize(obj, {ignoreFunction: true})
-
-        expect(result).toStrictEqual([0])
-
-      })
-
-      test('function in set', () => {
-
-        const obj = new Set([() => {}, 0])
-
-        const result = serialize(obj, {ignoreFunction: true})
-
-        expect(result).toStrictEqual({__type: 'Set', __value: [0]})
-
-      })
-
-      test('function in map', () => {
-
-        const obj = new Map([['a', () => {}]])
-
-        const result = serialize(obj, {ignoreFunction: true})
-
-        expect(result).toStrictEqual({__type: 'Map', __value: []})
-
-      })
-
-    })
-
-    describe('false', () => {
-
-      const fn = () => {}
-
-      test('function', () => {
-        const result: T.SerializedFunction = serialize(fn, {ignoreFunction: false})
-        expect(result).toStrictEqual({__type: 'Function', __value: fn.toString()})
-      })
-
-      test('function in object', () => {
-
-        const obj = {
-          a: 'a',
-          b: fn
-        }
-
-        const result: {a: T.SerializedString, b: T.SerializedFunction} = serialize(obj, {ignoreFunction: false})
-
-        expect(result).toStrictEqual({
-          a: 'a',
-          b: {__type: 'Function', __value: fn.toString()}
-        })
-
-      })
-
-      test('function in array', () => {
-
-        const obj = [fn, 0]
-
-        const result: (T.SerializedNumber | T.SerializedFunction)[] = serialize(obj, {ignoreFunction: false})
-
-        expect(result).toStrictEqual([{__type: 'Function', __value: fn.toString()}, 0])
-
-      })
-
-      test('function in set', () => {
-
-        const obj = new Set([fn, 0])
-
-        const result = serialize(obj, {ignoreFunction: false})
-
-        expect(result).toStrictEqual({__type: 'Set', __value: [{__type: 'Function', __value: fn.toString()}, 0]})
-
-      })
-
-      test('function in map', () => {
-
-        const obj = new Map([['a', () => {}]])
-
-        const result = serialize(obj, {ignoreFunction: false})
-
-        expect(result).toStrictEqual({__type: 'Map', __value: [['a', {__type: 'Function', __value: fn.toString()}]]})
-
       })
 
     })
@@ -317,9 +196,9 @@ describe('serialize', () => {
       a: [0, 1, 2],
       b: {
         c: {
-          __type: 'Map', __value: [['d', [{
+          __t: 'Map', __v: [['d', [{
             e: true,
-            f: {__type: 'Set', __value: ['g']}
+            f: {__t: 'Set', __v: ['g']}
           }]]]
         }
       }

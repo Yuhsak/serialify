@@ -1,5 +1,6 @@
 import {
   is,
+  what,
 } from '../src/is'
 
 describe('is', () => {
@@ -46,6 +47,14 @@ describe('is', () => {
       expect(is.ArrayBuffer(new Uint8Array([0, 1]).buffer)).toBe(true)
     })
 
+  })
+
+})
+
+describe('what', () => {
+
+  test('string', () => {
+    expect(what('test')).toBe('String')
   })
 
 })

@@ -15,7 +15,6 @@ describe('sample code for README', () => {
       Undefined: undefined,
       Null: null,
       Date: d1,
-      Function: function () {return 'OK'},
       Symbol: Symbol('test'),
       RegExp: new RegExp('^http:\/\/(.*?)(\/|$)', 'i'),
       BigInt: BigInt('2'),
@@ -43,47 +42,46 @@ describe('sample code for README', () => {
     expect(obj).toStrictEqual({
       String: 'John',
       Number: 28,
-      Infinity: {__type: 'Number', __value: 'infinity'},
-      NaN: {__type: 'Number', __value: 'nan'},
+      Infinity: {__t: 'Number', __v: 'infinity'},
+      NaN: {__t: 'Number', __v: 'nan'},
       Boolean: true,
-      Undefined: {__type: 'Undefined', __value: 'undefined'},
+      Undefined: {__t: 'Undefined', __v: 'undefined'},
       Null: null,
-      Date: {__type: 'Date', __value: d1.getTime()},
-      Function: {__type: 'Function', __value: "function () { return 'OK'; }"},
-      Symbol: {__type: 'Symbol', __value: 'test'},
-      RegExp: {__type: 'RegExp', __value: {source: '^http:\\/\\/(.*?)(\\/|$)', flags: 'i'}},
-      BigInt: {__type: 'BigInt', __value: '2'},
-      Map: {__type: 'Map', __value: [['a', 0], ['b', 1]]},
-      Set: {__type: 'Set', __value: [0, 1]},
+      Date: {__t: 'Date', __v: d1.getTime()},
+      Symbol: {__t: 'Symbol', __v: 'test'},
+      RegExp: {__t: 'RegExp', __v: {source: '^http:\\/\\/(.*?)(\\/|$)', flags: 'i'}},
+      BigInt: {__t: 'BigInt', __v: '2'},
+      Map: {__t: 'Map', __v: [['a', 0], ['b', 1]]},
+      Set: {__t: 'Set', __v: [0, 1]},
       Array: [0, 1],
       Object: {a: 0, b: 1},
       NestedArray: [
-        { __type: 'Date', __value: d1.getTime() },
+        { __t: 'Date', __v: d1.getTime() },
         10,
         {
-          Set: { __type: 'Set', __value: [0, 1] }
+          Set: { __t: 'Set', __v: [0, 1] }
         }
       ],
       NestedObject: {
-        Date: { __type: 'Date', __value: d1.getTime() },
+        Date: { __t: 'Date', __v: d1.getTime() },
         Object: {
           Number: 10,
-          NaN: {__type: 'Number', __value: 'nan'}
+          NaN: {__t: 'Number', __v: 'nan'}
         }
       },
-      Buffer: {__type: 'Buffer', __value: [97, 98, 99, 100]},
-      ArrayBuffer: {__type: 'ArrayBuffer', __value: [0, 1, 2, 3]},
-      Int8Array: {__type: 'Int8Array', __value: [0, 1, 2, 3]},
-      Uint8Array: {__type: 'Uint8Array', __value: [0, 1, 2, 3]},
-      Uint8ClampedArray: {__type: 'Uint8ClampedArray', __value: [0, 1, 2, 3]},
-      Int16Array: {__type: 'Int16Array', __value: [0, 1, 2, 3]},
-      Uint16Array: {__type: 'Uint16Array', __value: [0, 1, 2, 3]},
-      Int32Array: {__type: 'Int32Array', __value: [0, 1, 2, 3]},
-      Uint32Array: {__type: 'Uint32Array', __value: [0, 1, 2, 3]},
-      Float32Array: {__type: 'Float32Array', __value: [0, 1, 2, 3]},
-      Float64Array: {__type: 'Float64Array', __value: [0, 1, 2, 3]},
-      BigInt64Array: {__type: 'BigInt64Array', __value: ['1']},
-      BigUint64Array: {__type: 'BigUint64Array', __value: ['1']},
+      Buffer: {__t: 'Buffer', __v: [97, 98, 99, 100]},
+      ArrayBuffer: {__t: 'ArrayBuffer', __v: [0, 1, 2, 3]},
+      Int8Array: {__t: 'Int8Array', __v: [0, 1, 2, 3]},
+      Uint8Array: {__t: 'Uint8Array', __v: [0, 1, 2, 3]},
+      Uint8ClampedArray: {__t: 'Uint8ClampedArray', __v: [0, 1, 2, 3]},
+      Int16Array: {__t: 'Int16Array', __v: [0, 1, 2, 3]},
+      Uint16Array: {__t: 'Uint16Array', __v: [0, 1, 2, 3]},
+      Int32Array: {__t: 'Int32Array', __v: [0, 1, 2, 3]},
+      Uint32Array: {__t: 'Uint32Array', __v: [0, 1, 2, 3]},
+      Float32Array: {__t: 'Float32Array', __v: [0, 1, 2, 3]},
+      Float64Array: {__t: 'Float64Array', __v: [0, 1, 2, 3]},
+      BigInt64Array: {__t: 'BigInt64Array', __v: ['1']},
+      BigUint64Array: {__t: 'BigUint64Array', __v: ['1']},
     })
 
   })
