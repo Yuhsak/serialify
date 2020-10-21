@@ -6,6 +6,44 @@ Object serializer/deserializer for node.js and browser written with TypeScript
 
 `npm install serialify`
 
+## Supported data types
+
+serialify can serialize many data types which is not supported by standard JSON.
+
+| type                | standard JSON?              | serialify               |
+| ------------------- | --------------------------- | ----------------------- |
+| `string`            | ✅                          | ✅                      |
+| `number`            | ✅                          | ✅                      |
+| `boolean`           | ✅                          | ✅                      |
+| `null`              | ✅                          | ✅                      |
+| `Array`             | ✅                          | ✅                      |
+| `Object`            | ✅                          | ✅                      |
+| `undefined`         | ❌                          | ✅                      |
+| `bigint`            | ❌                          | ✅                      |
+| `NaN`               | ❌                          | ✅                      |
+| `Infinity`          | ❌                          | ✅                      |
+| `Date`              | ❌                          | ✅                      |
+| `RegExp`            | ❌                          | ✅                      |
+| `Set`               | ❌                          | ✅                      |
+| `Map`               | ❌                          | ✅                      |
+| `URL`               | ❌                          | ✅                      |
+| `URLSearchParams`   | ❌                          | ✅                      |
+| `Buffer`            | ❌                          | ✅                      |
+| `DataView`          | ❌                          | ✅                      |
+| `ArrayBuffer`       | ❌                          | ✅                      |
+| `SharedArrayBuffer` | ❌                          | ✅                      |
+| `Int8Array`         | ❌                          | ✅                      |
+| `Uint8Array`        | ❌                          | ✅                      |
+| `Uint8ClampedArray` | ❌                          | ✅                      |
+| `Int16Array`        | ❌                          | ✅                      |
+| `Uint16Array`       | ❌                          | ✅                      |
+| `Int32Array`        | ❌                          | ✅                      |
+| `Uint32Array`       | ❌                          | ✅                      |
+| `Float32Array`      | ❌                          | ✅                      |
+| `Float64Array`      | ❌                          | ✅                      |
+| `BigInt64Array`     | ❌                          | ✅                      |
+| `BigUint64Array`    | ❌                          | ✅                      |
+
 ## Usage
 
 ### Serialize
