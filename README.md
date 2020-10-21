@@ -1,6 +1,6 @@
 # serialify
 
-Object serializer/deserializer for node.js and browser written with TypeScript
+Extended object serializer/deserializer for Node.js and browser written with TypeScript.
 
 ## Installation
 
@@ -10,18 +10,18 @@ Object serializer/deserializer for node.js and browser written with TypeScript
 
 serialify can serialize many data types which is not supported by standard JSON.
 
-| type                | standard JSON?              | serialify               |
+| type                | standard JSON               | serialify               |
 | ------------------- | --------------------------- | ----------------------- |
-| `string`            | ✅                          | ✅                      |
 | `number`            | ✅                          | ✅                      |
 | `boolean`           | ✅                          | ✅                      |
+| `string`            | ✅                          | ✅                      |
 | `null`              | ✅                          | ✅                      |
 | `Array`             | ✅                          | ✅                      |
 | `Object`            | ✅                          | ✅                      |
 | `undefined`         | ❌                          | ✅                      |
-| `bigint`            | ❌                          | ✅                      |
 | `NaN`               | ❌                          | ✅                      |
 | `Infinity`          | ❌                          | ✅                      |
+| `bigint`            | ❌                          | ✅                      |
 | `Date`              | ❌                          | ✅                      |
 | `RegExp`            | ❌                          | ✅                      |
 | `Set`               | ❌                          | ✅                      |
