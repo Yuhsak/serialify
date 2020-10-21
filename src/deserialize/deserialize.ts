@@ -39,6 +39,12 @@ export const deserializer = {
   Date: (obj: S.SerializedDate) => {
     return new Date(obj.__v)
   },
+  URL: (obj: S.SerializedURL) => {
+    return new URL(obj.__v)
+  },
+  URLSearchParams: (obj: S.SerializedURLSearchParams) => {
+    return new URLSearchParams(obj.__v)
+  },
   Map: (obj: S.SerializedMap) => {
     return new Map(obj.__v.map(([k, v]) => [k, deserialize(v)]))
   },
@@ -51,8 +57,18 @@ export const deserializer = {
   Array: (obj: S.SerializedArray) => {
     return obj.map(v => deserialize(v))
   },
+  DataView: (obj: S.SerializedDataView) => {
+    return new DataView(new Uint8Array(obj.__v.buffer).buffer, obj.__v.byteOffset, obj.__v.byteLength)
+  },
   ArrayBuffer: (obj: S.SerializedArrayBuffer) => {
     return new Uint8Array(obj.__v).buffer
+  },
+  SharedArrayBuffer: (obj: S.SerializedSharedArrayBuffer) => {
+    const sab = new SharedArrayBuffer(obj.__v.length)
+    const ui8 = new Uint8Array(sab)
+    let i = 0
+    while (i<ui8.length) {ui8[i] = obj.__v[i++]}
+    return sab
   },
   Buffer: (obj: S.SerializedBuffer) => {
     return Buffer.from(obj.__v)

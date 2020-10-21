@@ -1,6 +1,7 @@
 import type * as S from '../types'
 
 export type DeserializeSingle<T> =
+  T extends S.SerializedDataView ? DataView :
   T extends S.SerializedArrayBuffer ? ArrayBuffer :
   T extends S.SerializedBigInt ? BigInt :
   T extends S.SerializedBigInt64Array ? BigInt64Array :
@@ -26,6 +27,8 @@ export type DeserializeSingle<T> =
   T extends S.SerializedUint8Array ? Uint8Array :
   T extends S.SerializedUint8ClampedArray ? Uint8ClampedArray :
   T extends S.SerializedUndefined ? undefined :
+  T extends S.SerializedURL ? URL :
+  T extends S.SerializedURLSearchParams ? URLSearchParams :
   never
 
 export type Deserialize<T> = T extends any

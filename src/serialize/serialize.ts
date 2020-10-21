@@ -49,6 +49,12 @@ export const serializer = {
   Date: (obj: Date): S.SerializedDate => {
     return {__t: 'Date', __v: obj.getTime()}
   },
+  URL: (obj: URL): S.SerializedURL => {
+    return {__t: 'URL', __v: obj.origin}
+  },
+  URLSearchParams: (obj: URLSearchParams): S.SerializedURLSearchParams => {
+    return {__t: 'URLSearchParams', __v: obj.toString()}
+  },
   Map: (obj: Map<any, any>): S.SerializedMap => {
     const keys = [...obj.keys()]
     return {__t: 'Map', __v: keys.map(key => [key, serialize(obj.get(key))])}
@@ -63,8 +69,14 @@ export const serializer = {
   Array: (obj: any[]): S.SerializedArray => {
     return obj.map(v => serialize(v))
   },
+  DataView: (obj: DataView): S.SerializedDataView => {
+    return {__t: 'DataView', __v: {buffer: spread(new Uint8Array(obj.buffer)), byteOffset: obj.byteOffset, byteLength: obj.byteLength}}
+  },
   ArrayBuffer: (obj: ArrayBuffer): S.SerializedArrayBuffer => {
-    return {__t: 'ArrayBuffer', __v: spread(Buffer.from(obj))}
+    return {__t: 'ArrayBuffer', __v: spread(new Uint8Array(obj))}
+  },
+  SharedArrayBuffer: (obj: SharedArrayBuffer): S.SerializedSharedArrayBuffer => {
+    return {__t: 'SharedArrayBuffer', __v: spread(new Uint8Array(obj))}
   },
   Buffer: (obj: Buffer): S.SerializedBuffer => {
     return {__t: 'Buffer', __v: spread(obj)}

@@ -23,9 +23,13 @@ export type SerializeSingle<O> =
   O extends Float64Array ? S.SerializedFloat64Array :
   O extends BigInt64Array ? S.SerializedBigInt64Array :
   O extends BigUint64Array ? S.SerializedBigUint64Array :
+  O extends DataView ? S.SerializedDataView :
   O extends ArrayBuffer ? S.SerializedArrayBuffer :
+  O extends SharedArrayBuffer ? S.SerializedSharedArrayBuffer :
   O extends Set<infer V> ? S.SerializedSet<V> :
   O extends Map<infer K, infer V> ? S.SerializedMap<K, V> :
+  O extends URL ? S.SerializedURL :
+  O extends URL ? S.SerializedURLSearchParams :
   never
 
 export type Serialize<T> = T extends any

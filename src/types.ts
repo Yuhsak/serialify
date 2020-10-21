@@ -19,7 +19,9 @@ export type SerializedMap<K=any, V=any> = Serialized<'Map', [K, V][]>
 export type SerializedSet<V=any> = Serialized<'Set', V[]>
 export type SerializedFunction = Serialized<'Function', string>
 export type SerializedArray = any[]
+export type SerializedDataView = Serialized<'DataView', {buffer: number[], byteOffset: number, byteLength: number}>
 export type SerializedArrayBuffer = Serialized<'ArrayBuffer', number[]>
+export type SerializedSharedArrayBuffer = Serialized<'SharedArrayBuffer', number[]>
 export type SerializedBuffer = Serialized<'Buffer', number[]>
 export type SerializedInt8Array = Serialized<'Int8Array', number[]>
 export type SerializedUint8Array = Serialized<'Uint8Array', number[]>
@@ -32,4 +34,6 @@ export type SerializedFloat32Array = Serialized<'Float32Array', number[]>
 export type SerializedFloat64Array = Serialized<'Float64Array', number[]>
 export type SerializedBigInt64Array = Serialized<'BigInt64Array', string[]>
 export type SerializedBigUint64Array = Serialized<'BigUint64Array', string[]>
+export type SerializedURL = Serialized<'URL', string>
+export type SerializedURLSearchParams = Serialized<'URLSearchParams', string>
 export type SerializedObject = any
