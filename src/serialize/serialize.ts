@@ -50,7 +50,7 @@ export const serializer = {
     return {__t: 'Date', __v: obj.getTime()}
   },
   URL: (obj: URL): S.SerializedURL => {
-    return {__t: 'URL', __v: obj.origin}
+    return {__t: 'URL', __v: obj.href}
   },
   URLSearchParams: (obj: URLSearchParams): S.SerializedURLSearchParams => {
     return {__t: 'URLSearchParams', __v: obj.toString()}
