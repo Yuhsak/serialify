@@ -1,12 +1,8 @@
-import {
-  what,
-} from '../is'
+import {what} from 'what-is-that'
 
 import type * as S from '../types'
-
-import type {
-  Serialize,
-} from './types'
+import type {Serialize} from './types'
+import {getObjectName} from '../util'
 
 function spread(obj: Buffer | S.TypedArray): number[]
 function spread(obj: S.TypedBigIntArray): string[]
@@ -55,17 +51,17 @@ export const serializer = {
   },
   Map: (obj: Map<any, any>): S.SerializedMap => {
     const keys = [...obj.keys()]
-    return {__t: 'Map', __v: keys.map(key => [key, serializeRecursive(obj.get(key))])}
+    return {__t: 'Map', __v: keys.map(key => [key, serialize(obj.get(key))])}
   },
   Set: (obj: Set<any>): S.SerializedSet => {
-    const values = [...obj.values()].map(v => serializeRecursive(v))
+    const values = [...obj.values()].map(v => serialize(v))
     return {__t: 'Set', __v: values}
   },
-  Function: (obj: Function): S.SerializedFunction => {
-    return {__t: 'Function', __v: obj.toString()}
-  },
+  // Function: (obj: Function): S.SerializedFunction => {
+  //   return {__t: 'Function', __v: obj.toString()}
+  // },
   Array: (obj: any[]): S.SerializedArray => {
-    return obj.map(v => serializeRecursive(v))
+    return obj.map(v => serialize(v))
   },
   ArrayBuffer: (obj: ArrayBuffer): S.SerializedArrayBuffer => {
     return {__t: 'ArrayBuffer', __v: spread(Buffer.from(obj))}
@@ -109,26 +105,10 @@ export const serializer = {
   Object: (obj: any): S.SerializedObject => {
     const o: Record<any, any> = {}
     for (const k in obj) {
-      o[k] = serializeRecursive(obj[k])
+      o[k] = serialize(obj[k])
     }
     return o
   }
-}
-
-type SerializeRecursiveFn = {
-  <T>(obj: T): Serialize<T>
-}
-
-const serializeRecursive: SerializeRecursiveFn = (obj: any): any => {
-  const type = what(obj)
-  if (!type) return obj
-  if (type === 'Function') return obj
-  // @ts-ignore
-  return serializer[type](obj)
-}
-
-export type SerializeOption = {
-  ignoreFunction?: boolean
 }
 
 type SerializeFn = {
@@ -136,9 +116,12 @@ type SerializeFn = {
 }
 
 export const serialize: SerializeFn = <T>(obj: T): Serialize<T> => {
-
-  return serializeRecursive(obj)
-
+  // @ts-ignore
+  const handler = serializer[what(obj)]
+  if (!handler) {
+    throw new Error(`${getObjectName(obj)} can't be serialized.`)
+  }
+  return handler(obj)
 }
 
 export const stringify = <T>(obj: T) => JSON.stringify(serialize(obj))

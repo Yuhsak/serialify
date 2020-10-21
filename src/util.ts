@@ -1,7 +1,6 @@
-export const fromEntries = (entries: [any, any][]) => {
-  return entries.reduce((acc, entry) => {
-    return {...acc, [entry[0]]: entry[1]}
-  }, {})
-}
+import {getReprStr} from 'what-is-that'
 
-export const toString = (obj: any) => Object.prototype.toString.call(obj)
+export const getObjectName = (obj: any): string => {
+  const repr = getReprStr(obj)
+  return (repr === 'Object' && typeof obj.constructor === 'function' && (obj.constructor.name || 'Unknown object (some instance of custom class or something)')) || repr
+}

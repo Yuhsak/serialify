@@ -10,7 +10,7 @@ export type SerializeSingle<O> =
   O extends BigInt ? S.SerializedBigInt :
   O extends RegExp ? S.SerializedRegExp :
   O extends Date ? S.SerializedDate :
-  O extends Function ? S.SerializedFunction :
+  // O extends Function ? S.SerializedFunction :
   O extends Buffer ? S.SerializedBuffer :
   O extends Int8Array ? S.SerializedInt8Array :
   O extends Uint8Array ? S.SerializedUint8Array :

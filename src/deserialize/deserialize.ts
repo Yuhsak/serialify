@@ -1,13 +1,8 @@
-import {
-  is,
-  what,
-} from '../is'
+import {is, what} from 'what-is-that'
 
 import type * as S from '../types'
-
-import {
-  Deserialize,
-} from './types'
+import type {Deserialize} from './types'
+import {getObjectName} from '../util'
 
 export const deserializer = {
   String: (obj: S.SerializedString) => {
@@ -45,16 +40,16 @@ export const deserializer = {
     return new Date(obj.__v)
   },
   Map: (obj: S.SerializedMap) => {
-    return new Map(obj.__v.map(([k, v]) => [k, deserializeRecursive(v)]))
+    return new Map(obj.__v.map(([k, v]) => [k, deserialize(v)]))
   },
   Set: (obj: S.SerializedSet) => {
-    return new Set(obj.__v.map(v => deserializeRecursive(v)))
+    return new Set(obj.__v.map(v => deserialize(v)))
   },
   // Function: (obj: S.SerializedFunction) => {
   //   return eval(`(${obj.__v})`)
   // },
   Array: (obj: S.SerializedArray) => {
-    return obj.map(v => deserializeRecursive(v))
+    return obj.map(v => deserialize(v))
   },
   ArrayBuffer: (obj: S.SerializedArrayBuffer) => {
     return new Uint8Array(obj.__v).buffer
@@ -98,44 +93,27 @@ export const deserializer = {
   Object: (obj: S.SerializedObject): any => {
     const o: Record<any, any> = {}
     for (const k in obj) {
-      o[k] = deserializeRecursive(obj[k])
+      o[k] = deserialize(obj[k])
     }
     return o
   }
 }
 
-type DeserializeRecursiveFn = {
-  <T>(obj: T): Deserialize<T>
-}
-
-export const deserializeRecursive: DeserializeRecursiveFn = (obj: any): any => {
-
-  if (!obj) return obj
-
-  const type = obj.__t as keyof typeof deserializer
-
-  if (!type || !deserializer[type]) {
-    const t = what(obj)
-    if (t === 'Array') {
-      return deserializer.Array(obj)
-    }
-    if (t === 'Object') {
-      return deserializer.Object(obj)
-    }
-    return obj
-  }
-
-  try {
+const getType = (obj: any) => {
+  const type = what(obj)
+  if (type === 'Null') return type
+  if (type === 'Number') return type
+  if (type === 'Boolean') return type
+  if (type === 'String') return type
+  if (type === 'Array') return type
+  if (type === 'Object') {
+    if (!obj.__t || !obj.__v) return type
+    if (obj.__t === 'Array') return type
     // @ts-ignore
-    return deserializer[type](obj)
-  } catch (e) {
-    return obj
+    if (!deserializer[obj.__t]) return type
+    return obj.__t
   }
-
-}
-
-export type DeserializeOption = {
-  dangerouslyDeserializeFunction?: boolean
+  return type
 }
 
 type DeserializeFn = {
@@ -144,7 +122,14 @@ type DeserializeFn = {
 
 export const deserialize: DeserializeFn = (obj: any): any => {
 
-  return deserializeRecursive(obj)
+  // @ts-ignore
+  const handler = deserializer[getType(obj)]
+
+  if (!handler) {
+    throw new Error(`${getObjectName(obj)} can't be deserialized.`)
+  }
+
+  return handler(obj)
 
 }
 

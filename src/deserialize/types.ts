@@ -10,7 +10,7 @@ export type DeserializeSingle<T> =
   T extends S.SerializedDate ? Date :
   T extends S.SerializedFloat32Array ? Float32Array :
   T extends S.SerializedFloat64Array ? Float64Array :
-  T extends S.SerializedFunction ? Function :
+  // T extends S.SerializedFunction ? Function :
   T extends S.SerializedInt16Array ? Int16Array :
   T extends S.SerializedInt32Array ? Int32Array :
   T extends S.SerializedInt8Array ? Int8Array :

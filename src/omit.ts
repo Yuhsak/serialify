@@ -1,6 +1,4 @@
-import {is} from './is'
-
-import {fromEntries} from './util'
+import {is} from 'what-is-that'
 
 import type * as S from './types'
 
@@ -47,7 +45,7 @@ export const omit: OmitFn = (obj: any, type: any): any => {
   }
 
   if (is.Object(obj)) {
-    return fromEntries(Object.entries(obj).filter(([, v]) => {
+    return Object.fromEntries(Object.entries(obj).filter(([, v]) => {
       try {
         return (v as any).__t !== type
       } catch (e) {
