@@ -1,4 +1,4 @@
-import {is, what} from 'what-is-that'
+import {isNumber, what} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Deserialize} from './types'
@@ -12,7 +12,7 @@ export const deserializer = {
     return obj
   },
   Number: (obj: S.SerializedNumber) => {
-    if (is.Number(obj)) return obj
+    if (isNumber(obj)) return obj
     if (obj.__v === 'infinity') {
       return Infinity
     }
