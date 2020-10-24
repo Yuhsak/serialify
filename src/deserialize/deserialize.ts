@@ -5,6 +5,9 @@ import type {Deserialize} from './types'
 import {getObjectName as g} from '../util'
 
 export const deserializer = {
+  Identity: (o: any) => {
+    return o
+  },
   String: (o: S.SerializedString) => {
     return o
   },
@@ -12,12 +15,13 @@ export const deserializer = {
     return o
   },
   Number: (o: S.SerializedNumber) => {
-    if (n(o)) return o
-    if (o.__v === 'infinity') {
-      return Infinity
-    }
-    if (o.__v === 'nan') {
-      return NaN
+    if (!n(o)) {
+      if (o.__v === 'nan') {
+        return NaN
+      }
+      if (o.__v === 'infinity') {
+        return Infinity
+      }
     }
     return o
   },
@@ -59,13 +63,6 @@ export const deserializer = {
   },
   ArrayBuffer: (o: S.SerializedArrayBuffer) => {
     return new Uint8Array(o.__v).buffer
-  },
-  SharedArrayBuffer: (o: S.SerializedSharedArrayBuffer) => {
-    const s = new SharedArrayBuffer(o.__v.length)
-    const u = new Uint8Array(s)
-    let i = 0
-    while (i<u.length) {u[i] = o.__v[i++]}
-    return s
   },
   Buffer: (o: S.SerializedBuffer) => {
     return Buffer.from(o.__v)
@@ -120,13 +117,14 @@ const gt = (o: any) => {
   if (t === 'String') return t
   if (t === 'Array') return t
   if (t === 'Object') {
-    if (!o.__t || !o.__v) return t
+    if (!o.__t || o.__v === void (0) || o.__v === null) return t
     if (o.__t === 'Array') return t
     // @ts-ignore
     if (!deserializer[o.__t]) return t
     return o.__t
   }
-  return t
+  // @ts-ignore
+  return deserializer[t] ? 'Identity' : void(0)
 }
 
 type DeserializeFn = {

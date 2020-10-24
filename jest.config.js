@@ -6,6 +6,10 @@ module.exports = {
     "**/tests/**/*.+(ts|tsx|js)",
     "**/?(*.)+(spec|test).+(ts|tsx|js)"
   ],
+  "collectCoverageFrom": [
+    "src/serialize/serialize.ts",
+    "src/deserialize/deserialize.ts"
+  ],
   "transform": {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },

@@ -37,8 +37,8 @@ export const serializer = {
     return null
   },
   Symbol: (o: symbol): S.SerializedSymbol => {
-    const key = o.toString().match(/Symbol\((.*?)\)/)?.[1]
-    return {__t: 'Symbol', __v: key || ''}
+    const k = (o.toString().match(/Symbol\((.+?)\)/)||['',''])[1]
+    return {__t: 'Symbol', __v: k}
   },
   BigInt: (o: BigInt): S.SerializedBigInt => {
     return {__t: 'BigInt', __v: o.toString()}
@@ -71,9 +71,6 @@ export const serializer = {
   },
   ArrayBuffer: (o: ArrayBuffer): S.SerializedArrayBuffer => {
     return {__t: 'ArrayBuffer', __v: spread(new Uint8Array(o))}
-  },
-  SharedArrayBuffer: (o: SharedArrayBuffer): S.SerializedSharedArrayBuffer => {
-    return {__t: 'SharedArrayBuffer', __v: spread(new Uint8Array(o))}
   },
   Buffer: (o: Buffer): S.SerializedBuffer => {
     return {__t: 'Buffer', __v: spread(o)}

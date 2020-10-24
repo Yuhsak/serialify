@@ -1,6 +1,7 @@
 import {
   serialize,
-} from '../src'
+  stringify,
+} from '../src/serialize'
 
 import type * as T from '../src/types'
 
@@ -70,7 +71,9 @@ describe('serialize', () => {
 
     test('Symbol', () => {
       const result: T.SerializedSymbol = serialize(Symbol('test'))
+      const result2: T.SerializedSymbol = serialize(Symbol())
       expect(result).toStrictEqual({__t: 'Symbol', __v: 'test'})
+      expect(result2).toStrictEqual({__t: 'Symbol', __v: ''})
     })
 
     test('Map', () => {
@@ -88,9 +91,96 @@ describe('serialize', () => {
       expect(result).toStrictEqual({__t: 'Buffer', __v: [97, 98, 99]})
     })
 
+    test('DataView', () => {
+      const result: T.SerializedDataView = serialize(new DataView(new ArrayBuffer(1)))
+      expect(result).toStrictEqual({__t: 'DataView', __v: {buffer: [0], byteOffset: 0, byteLength: 1}})
+    })
+
     test('ArrayBuffer', () => {
       const result: T.SerializedArrayBuffer = serialize(new Uint8Array([0, 1, 2, 3]).buffer)
       expect(result).toStrictEqual({__t: 'ArrayBuffer', __v: [0, 1, 2, 3]})
+    })
+
+    test('URL', () => {
+      const result: T.SerializedURL = serialize(new URL('http://a/'))
+      expect(result).toStrictEqual({__t: 'URL', __v: 'http://a/'})
+    })
+
+    test('URLSearchParams', () => {
+      const result: T.SerializedURLSearchParams = serialize(new URLSearchParams({q: 'test'}))
+      expect(result).toStrictEqual({__t: 'URLSearchParams', __v: 'q=test'})
+    })
+
+    test('Date', () => {
+      const d = new Date()
+      const result: T.SerializedDate = serialize(d)
+      expect(result).toStrictEqual({__t: 'Date', __v: d.getTime()})
+    })
+
+    test('Int8Array', () => {
+      const o = new Int8Array()
+      const result: T.SerializedInt8Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Int8Array', __v: []})
+    })
+
+    test('Uint8Array', () => {
+      const o = new Uint8Array()
+      const result: T.SerializedUint8Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Uint8Array', __v: []})
+    })
+
+    test('Uint8ClampedArray', () => {
+      const o = new Uint8ClampedArray()
+      const result: T.SerializedUint8ClampedArray = serialize(o)
+      expect(result).toStrictEqual({__t: 'Uint8ClampedArray', __v: []})
+    })
+
+    test('Int16Array', () => {
+      const o = new Int16Array()
+      const result: T.SerializedInt16Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Int16Array', __v: []})
+    })
+
+    test('Uint16Array', () => {
+      const o = new Uint16Array()
+      const result: T.SerializedUint16Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Uint16Array', __v: []})
+    })
+
+    test('Int32Array', () => {
+      const o = new Int32Array()
+      const result: T.SerializedInt32Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Int32Array', __v: []})
+    })
+
+    test('Uint32Array', () => {
+      const o = new Uint32Array()
+      const result: T.SerializedUint32Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Uint32Array', __v: []})
+    })
+
+    test('Float32Array', () => {
+      const o = new Float32Array()
+      const result: T.SerializedFloat32Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Float32Array', __v: []})
+    })
+
+    test('Float64Array', () => {
+      const o = new Float64Array()
+      const result: T.SerializedFloat64Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'Float64Array', __v: []})
+    })
+
+    test('BigInt64Array', () => {
+      const o = new BigInt64Array(new ArrayBuffer(8))
+      const result: T.SerializedBigInt64Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'BigInt64Array', __v: ['0']})
+    })
+
+    test('BigUint64Array', () => {
+      const o = new BigUint64Array(new ArrayBuffer(8))
+      const result: T.SerializedBigUint64Array = serialize(o)
+      expect(result).toStrictEqual({__t: 'BigUint64Array', __v: ['0']})
     })
 
   })
@@ -220,6 +310,25 @@ describe('serialize', () => {
 
     })
 
+  })
+
+  describe('Error', () => {
+
+    test('Function', () => {
+      const f = () => {}
+      expect(() => {
+        serialize(f)
+      }).toThrowError('Function can\'t be serialized.')
+    })
+
+  })
+
+})
+
+describe('stringify', () => {
+
+  test('undefined', () => {
+    expect(stringify({a: undefined})).toBe('{"a":{"__t":"Undefined","__v":"undefined"}}')
   })
 
 })

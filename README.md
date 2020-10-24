@@ -33,7 +33,6 @@ Extended object serializer/deserializer for Node.js and browser written in TypeS
 | `Buffer`            | ❌                          | ✅                      |
 | `DataView`          | ❌                          | ✅                      |
 | `ArrayBuffer`       | ❌                          | ✅                      |
-| `SharedArrayBuffer` | ❌                          | ✅                      |
 | `Int8Array`         | ❌                          | ✅                      |
 | `Uint8Array`        | ❌                          | ✅                      |
 | `Uint8ClampedArray` | ❌                          | ✅                      |
@@ -78,7 +77,6 @@ serialize({
   Buffer:            Buffer.from('abcd'),
   DataView:          new DataView(new Uint8Array([0, 1, 2, 3]).buffer, 1, 2),
   ArrayBuffer:       new Uint8Array([0, 1, 2, 3]).buffer,
-  SharedArrayBuffer: new SharedArrayBuffer(4),
   Int8Array:         new Int8Array([0, 1, 2, 3]),
   Uint8Array:        new Uint8Array([0, 1, 2, 3]),
   Uint8ClampedArray: new Uint8ClampedArray([0, 1, 2, 3]),
@@ -123,7 +121,6 @@ The code above will produce the following serialized object:
   Buffer:            { __t: 'Buffer', __v: [97, 98, 99, 100] },
   DataView:          { __t: 'DataView', __v: {buffer: [0, 1, 2, 3], byteOffset: 1, byteLength: 2} },
   ArrayBuffer:       { __t: 'ArrayBuffer', __v: [0, 1, 2, 3] },
-  SharedArrayBuffer: { __t: 'SharedArrayBuffer', __v: [0, 0, 0, 0] },
   Int8Array:         { __t: 'Int8Array', __v: [0, 1, 2, 3] },
   Uint8Array:        { __t: 'Uint8Array', __v: [0, 1, 2, 3] },
   Uint8ClampedArray: { __t: 'Uint8ClampedArray', __v: [0, 1, 2, 3] },

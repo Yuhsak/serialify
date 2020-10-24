@@ -21,7 +21,6 @@ export type SerializedFunction = Serialized<'Function', string>
 export type SerializedArray = any[]
 export type SerializedDataView = Serialized<'DataView', {buffer: number[], byteOffset: number, byteLength: number}>
 export type SerializedArrayBuffer = Serialized<'ArrayBuffer', number[]>
-export type SerializedSharedArrayBuffer = Serialized<'SharedArrayBuffer', number[]>
 export type SerializedBuffer = Serialized<'Buffer', number[]>
 export type SerializedInt8Array = Serialized<'Int8Array', number[]>
 export type SerializedUint8Array = Serialized<'Uint8Array', number[]>
