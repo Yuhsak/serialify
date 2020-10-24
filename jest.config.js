@@ -11,7 +11,7 @@ module.exports = {
   },
   "globals": {
     "ts-jest": {
-      "tsConfig": "tsconfig.esm.json"
+      "tsConfig": "tsconfig.test.json"
     }
   }
 }

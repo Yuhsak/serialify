@@ -1,0 +1,16 @@
+os: linux
+dist: focal
+language: node_js
+node_js:
+  - 12
+script: npm run test:ci
+deploy:
+  provider: npm
+  email: yuhsak.inoue@gmail.com
+  api_token:
+    secure: Tm/dZldgpHrT7sPGPwrAxXOATYxhEfxImM78UXXPT38nA+V7Dry20NX/HjXxR8DfTD3YwbodJHK9NBy1qvx04v3TzGJ4UAHWbWhtlXS1wxj2Rr8bBXtvmwvtVmIORG3o5iOUtmBrrdvjxGQMPQAmg2NlHeIa3WqX6Phgd2rlkB7J+6Rab9ZXes7xv6JNwz8dfJYlBr+KPbg6iiRrH24ugJw1EACzIjAmrjQUapogRzzb+eF/JQGMvts3+MjVl1wX2TlKuybmmW+LncuieG8tbBz4h9NLvD4ihThtRjrulNiXeZ1ZPjDCjQ0X2QUBNZ6J8li6N/rYmaOZWRQcJU3srBrx2unYXEY7118qWqWF/7+9LrpM/0M/JY/z2MU6FOfL3r4yKh7SGH14JuHGKWp0YNGDK1+JT95pRrUhhC7mybjA4LCVa8vQTaoCWduF4GJgEtDJhdcQiIi/ea9RMoc/nzBXyUDYNB7uvLGDf2MmqcWKDCU8cfENAJbFBtzyWO9P79Dk1DLLOSaaTh+7VHoooW4R0k0Ir7FF9QpQS2GrQH6Ns4aLCC+cBGBaJkfxbYjK/GieiyVGIGq3A1riy6AmMwciuLt4hp05ADBcjF7v0I78/oXlTwo1pq6rzmgN38S9FqaE8Fa9U0XiN0fQXvrKd2Lgceg947BjbPwSYMLHklc=
+  on:
+    tags: true
+    repo: Yuhsak/serialify
+    branch: main
+  skip_cleanup: true

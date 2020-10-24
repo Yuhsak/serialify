@@ -1,4 +1,4 @@
-import { serialize, deserialize } from '../src'
+import { serialize } from '../src'
 
 describe('sample code for README', () => {
 

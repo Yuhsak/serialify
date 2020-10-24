@@ -261,7 +261,7 @@ const d = deserialize(s)
 
 ### Parse
 
-`parse()` to deserialize jsonString created by `stringify()`.
+`parse()` to deserialize JSON string created by `stringify()`.
 
 ```ts
 import {stringify, parse} from 'serialify'
