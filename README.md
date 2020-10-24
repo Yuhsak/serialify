@@ -1,4 +1,4 @@
-# serialify [![Build Status](https://travis-ci.org/Yuhsak/serialify.svg?branch=main)](https://travis-ci.org/Yuhsak/serialify)
+# serialify [![Build Status](https://travis-ci.org/Yuhsak/serialify.svg?branch=main)](https://travis-ci.org/Yuhsak/serialify) [![Coverage Status](https://coveralls.io/repos/github/Yuhsak/serialify/badge.svg?branch=main)](https://coveralls.io/github/Yuhsak/serialify?branch=main)
 
 Extended object serializer/deserializer for Node.js and browser written in TypeScript.
 
