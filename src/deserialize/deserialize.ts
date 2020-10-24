@@ -1,152 +1,149 @@
-import {isNumber, what} from 'what-is-that'
+import {isNumber as n, what} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Deserialize} from './types'
-import {getObjectName} from '../util'
+import {getObjectName as g} from '../util'
 
 export const deserializer = {
-  String: (obj: S.SerializedString) => {
-    return obj
+  String: (o: S.SerializedString) => {
+    return o
   },
-  Boolean: (obj: S.SerializedBoolean) => {
-    return obj
+  Boolean: (o: S.SerializedBoolean) => {
+    return o
   },
-  Number: (obj: S.SerializedNumber) => {
-    if (isNumber(obj)) return obj
-    if (obj.__v === 'infinity') {
+  Number: (o: S.SerializedNumber) => {
+    if (n(o)) return o
+    if (o.__v === 'infinity') {
       return Infinity
     }
-    if (obj.__v === 'nan') {
+    if (o.__v === 'nan') {
       return NaN
     }
-    return obj
+    return o
   },
-  Undefined: (obj: S.SerializedUndefined) => {
+  Undefined: (o: S.SerializedUndefined) => {
     return void (0)
   },
-  Null: (obj: S.SerializedNull) => {
+  Null: (o: S.SerializedNull) => {
     return null
   },
-  Symbol: (obj: S.SerializedSymbol) => {
-    return Symbol(obj.__v)
+  Symbol: (o: S.SerializedSymbol) => {
+    return Symbol(o.__v)
   },
-  BigInt: (obj: S.SerializedBigInt) => {
-    return BigInt(obj.__v)
+  BigInt: (o: S.SerializedBigInt) => {
+    return BigInt(o.__v)
   },
-  RegExp: (obj: S.SerializedRegExp) => {
-    return new RegExp(obj.__v.source, obj.__v.flags)
+  RegExp: (o: S.SerializedRegExp) => {
+    return new RegExp(o.__v.source, o.__v.flags)
   },
-  Date: (obj: S.SerializedDate) => {
-    return new Date(obj.__v)
+  Date: (o: S.SerializedDate) => {
+    return new Date(o.__v)
   },
-  URL: (obj: S.SerializedURL) => {
-    return new URL(obj.__v)
+  URL: (o: S.SerializedURL) => {
+    return new URL(o.__v)
   },
-  URLSearchParams: (obj: S.SerializedURLSearchParams) => {
-    return new URLSearchParams(obj.__v)
+  URLSearchParams: (o: S.SerializedURLSearchParams) => {
+    return new URLSearchParams(o.__v)
   },
-  Map: (obj: S.SerializedMap) => {
-    return new Map(obj.__v.map(([k, v]) => [k, deserialize(v)]))
+  Map: (o: S.SerializedMap) => {
+    return new Map(o.__v.map(([k, v]) => [k, deserialize(v)]))
   },
-  Set: (obj: S.SerializedSet) => {
-    return new Set(obj.__v.map(v => deserialize(v)))
+  Set: (o: S.SerializedSet) => {
+    return new Set(o.__v.map(v => deserialize(v)))
   },
-  // Function: (obj: S.SerializedFunction) => {
-  //   return eval(`(${obj.__v})`)
-  // },
-  Array: (obj: S.SerializedArray) => {
-    return obj.map(v => deserialize(v))
+  Array: (o: S.SerializedArray) => {
+    return o.map(v => deserialize(v))
   },
-  DataView: (obj: S.SerializedDataView) => {
-    return new DataView(new Uint8Array(obj.__v.buffer).buffer, obj.__v.byteOffset, obj.__v.byteLength)
+  DataView: (o: S.SerializedDataView) => {
+    return new DataView(new Uint8Array(o.__v.buffer).buffer, o.__v.byteOffset, o.__v.byteLength)
   },
-  ArrayBuffer: (obj: S.SerializedArrayBuffer) => {
-    return new Uint8Array(obj.__v).buffer
+  ArrayBuffer: (o: S.SerializedArrayBuffer) => {
+    return new Uint8Array(o.__v).buffer
   },
-  SharedArrayBuffer: (obj: S.SerializedSharedArrayBuffer) => {
-    const sab = new SharedArrayBuffer(obj.__v.length)
-    const ui8 = new Uint8Array(sab)
+  SharedArrayBuffer: (o: S.SerializedSharedArrayBuffer) => {
+    const s = new SharedArrayBuffer(o.__v.length)
+    const u = new Uint8Array(s)
     let i = 0
-    while (i<ui8.length) {ui8[i] = obj.__v[i++]}
-    return sab
+    while (i<u.length) {u[i] = o.__v[i++]}
+    return s
   },
-  Buffer: (obj: S.SerializedBuffer) => {
-    return Buffer.from(obj.__v)
+  Buffer: (o: S.SerializedBuffer) => {
+    return Buffer.from(o.__v)
   },
-  Int8Array: (obj: S.SerializedInt8Array) => {
-    return new Int8Array(obj.__v)
+  Int8Array: (o: S.SerializedInt8Array) => {
+    return new Int8Array(o.__v)
   },
-  Uint8Array: (obj: S.SerializedUint8Array) => {
-    return new Uint8Array(obj.__v)
+  Uint8Array: (o: S.SerializedUint8Array) => {
+    return new Uint8Array(o.__v)
   },
-  Uint8ClampedArray: (obj: S.SerializedUint8ClampedArray) => {
-    return new Uint8ClampedArray(obj.__v)
+  Uint8ClampedArray: (o: S.SerializedUint8ClampedArray) => {
+    return new Uint8ClampedArray(o.__v)
   },
-  Int16Array: (obj: S.SerializedInt16Array) => {
-    return new Int16Array(obj.__v)
+  Int16Array: (o: S.SerializedInt16Array) => {
+    return new Int16Array(o.__v)
   },
-  Uint16Array: (obj: S.SerializedUint16Array) => {
-    return new Uint16Array(obj.__v)
+  Uint16Array: (o: S.SerializedUint16Array) => {
+    return new Uint16Array(o.__v)
   },
-  Int32Array: (obj: S.SerializedInt32Array) => {
-    return new Int32Array(obj.__v)
+  Int32Array: (o: S.SerializedInt32Array) => {
+    return new Int32Array(o.__v)
   },
-  Uint32Array: (obj: S.SerializedUint32Array) => {
-    return new Uint32Array(obj.__v)
+  Uint32Array: (o: S.SerializedUint32Array) => {
+    return new Uint32Array(o.__v)
   },
-  Float32Array: (obj: S.SerializedFloat32Array) => {
-    return new Float32Array(obj.__v)
+  Float32Array: (o: S.SerializedFloat32Array) => {
+    return new Float32Array(o.__v)
   },
-  Float64Array: (obj: S.SerializedFloat64Array) => {
-    return new Float64Array(obj.__v)
+  Float64Array: (o: S.SerializedFloat64Array) => {
+    return new Float64Array(o.__v)
   },
-  BigInt64Array: (obj: S.SerializedBigInt64Array) => {
-    return new BigInt64Array(obj.__v.map(v => BigInt(v)))
+  BigInt64Array: (o: S.SerializedBigInt64Array) => {
+    return new BigInt64Array(o.__v.map(v => BigInt(v)))
   },
-  BigUint64Array: (obj: S.SerializedBigUint64Array) => {
-    return new BigUint64Array(obj.__v.map(v => BigInt(v)))
+  BigUint64Array: (o: S.SerializedBigUint64Array) => {
+    return new BigUint64Array(o.__v.map(v => BigInt(v)))
   },
-  Object: (obj: S.SerializedObject): any => {
-    const o: Record<any, any> = {}
-    for (const k in obj) {
-      o[k] = deserialize(obj[k])
+  Object: (o: S.SerializedObject): any => {
+    const t: Record<any, any> = {}
+    for (const k in o) {
+      t[k] = deserialize(o[k])
     }
-    return o
+    return t
   }
 }
 
-const getType = (obj: any) => {
-  const type = what(obj)
-  if (type === 'Null') return type
-  if (type === 'Number') return type
-  if (type === 'Boolean') return type
-  if (type === 'String') return type
-  if (type === 'Array') return type
-  if (type === 'Object') {
-    if (!obj.__t || !obj.__v) return type
-    if (obj.__t === 'Array') return type
+const gt = (o: any) => {
+  const t = what(o)
+  if (t === 'Null') return t
+  if (t === 'Number') return t
+  if (t === 'Boolean') return t
+  if (t === 'String') return t
+  if (t === 'Array') return t
+  if (t === 'Object') {
+    if (!o.__t || !o.__v) return t
+    if (o.__t === 'Array') return t
     // @ts-ignore
-    if (!deserializer[obj.__t]) return type
-    return obj.__t
+    if (!deserializer[o.__t]) return t
+    return o.__t
   }
-  return type
+  return t
 }
 
 type DeserializeFn = {
-  <T>(obj: T): Deserialize<T>
+  <T>(o: T): Deserialize<T>
 }
 
-export const deserialize: DeserializeFn = (obj: any): any => {
+export const deserialize: DeserializeFn = (o: any): any => {
 
   // @ts-ignore
-  const handler = deserializer[getType(obj)]
+  const f = deserializer[gt(o)]
 
-  if (!handler) {
-    throw new Error(`${getObjectName(obj)} can't be deserialized.`)
+  if (!f) {
+    throw new Error(`${g(o)} can't be deserialized.`)
   }
 
-  return handler(obj)
+  return f(o)
 
 }
 
-export const parse = (obj: string): any => deserialize(JSON.parse(obj))
+export const parse = (o: string): any => deserialize(JSON.parse(o))

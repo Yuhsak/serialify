@@ -1,139 +1,136 @@
-import {what} from 'what-is-that'
+import {what as w} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Serialize} from './types'
-import {getObjectName} from '../util'
+import {getObjectName as g} from '../util'
 
-function spread(obj: Buffer | S.TypedArray): number[]
-function spread(obj: S.TypedBigIntArray): string[]
-function spread(obj: Buffer | S.TypedArray | S.TypedBigIntArray) {
-  const type = what(obj)
-  const arr = []
+function spread(o: Buffer | S.TypedArray): number[]
+function spread(o: S.TypedBigIntArray): string[]
+function spread(o: Buffer | S.TypedArray | S.TypedBigIntArray) {
+  const t = w(o)
+  const a = []
   let i = 0
-  while (i < obj.length) {
-    arr.push((type === 'BigInt64Array' || type === 'BigUint64Array') ? obj[i++].toString() : obj[i++])
+  while (i < o.length) {
+    a.push((t === 'BigInt64Array' || t === 'BigUint64Array') ? o[i++].toString() : o[i++])
   }
-  return arr
+  return a
 }
 
 export const serializer = {
-  String: (obj: string): S.SerializedString => {
-    return obj
+  String: (o: string): S.SerializedString => {
+    return o
   },
-  Boolean: (obj: boolean): S.SerializedBoolean => {
-    return obj
+  Boolean: (o: boolean): S.SerializedBoolean => {
+    return o
   },
-  Number: (obj: number): S.SerializedNumber => {
-    return isNaN(obj)
+  Number: (o: number): S.SerializedNumber => {
+    return isNaN(o)
       ? {__t: 'Number', __v: 'nan'}
-      : !isFinite(obj)
+      : !isFinite(o)
         ? {__t: 'Number', __v: 'infinity'}
-        : obj
+        : o
   },
-  Undefined: (obj: undefined): S.SerializedUndefined => {
+  Undefined: (o: undefined): S.SerializedUndefined => {
     return {__t: 'Undefined', __v: 'undefined'}
   },
-  Null: (obj: null): S.SerializedNull => {
+  Null: (o: null): S.SerializedNull => {
     return null
   },
-  Symbol: (obj: symbol): S.SerializedSymbol => {
-    const key = obj.toString().match(/Symbol\((.*?)\)/)?.[1]
+  Symbol: (o: symbol): S.SerializedSymbol => {
+    const key = o.toString().match(/Symbol\((.*?)\)/)?.[1]
     return {__t: 'Symbol', __v: key || ''}
   },
-  BigInt: (obj: BigInt): S.SerializedBigInt => {
-    return {__t: 'BigInt', __v: obj.toString()}
+  BigInt: (o: BigInt): S.SerializedBigInt => {
+    return {__t: 'BigInt', __v: o.toString()}
   },
-  RegExp: (obj: RegExp): S.SerializedRegExp => {
-    return {__t: 'RegExp', __v: {source: obj.source, flags: obj.flags}}
+  RegExp: (o: RegExp): S.SerializedRegExp => {
+    return {__t: 'RegExp', __v: {source: o.source, flags: o.flags}}
   },
-  Date: (obj: Date): S.SerializedDate => {
-    return {__t: 'Date', __v: obj.getTime()}
+  Date: (o: Date): S.SerializedDate => {
+    return {__t: 'Date', __v: o.getTime()}
   },
-  URL: (obj: URL): S.SerializedURL => {
-    return {__t: 'URL', __v: obj.href}
+  URL: (o: URL): S.SerializedURL => {
+    return {__t: 'URL', __v: o.href}
   },
-  URLSearchParams: (obj: URLSearchParams): S.SerializedURLSearchParams => {
-    return {__t: 'URLSearchParams', __v: obj.toString()}
+  URLSearchParams: (o: URLSearchParams): S.SerializedURLSearchParams => {
+    return {__t: 'URLSearchParams', __v: o.toString()}
   },
-  Map: (obj: Map<any, any>): S.SerializedMap => {
-    const keys = [...obj.keys()]
-    return {__t: 'Map', __v: keys.map(key => [key, serialize(obj.get(key))])}
+  Map: (o: Map<any, any>): S.SerializedMap => {
+    const keys = [...o.keys()]
+    return {__t: 'Map', __v: keys.map(key => [key, serialize(o.get(key))])}
   },
-  Set: (obj: Set<any>): S.SerializedSet => {
-    const values = [...obj.values()].map(v => serialize(v))
+  Set: (o: Set<any>): S.SerializedSet => {
+    const values = [...o.values()].map(v => serialize(v))
     return {__t: 'Set', __v: values}
   },
-  // Function: (obj: Function): S.SerializedFunction => {
-  //   return {__t: 'Function', __v: obj.toString()}
-  // },
-  Array: (obj: any[]): S.SerializedArray => {
-    return obj.map(v => serialize(v))
+  Array: (o: any[]): S.SerializedArray => {
+    return o.map(v => serialize(v))
   },
-  DataView: (obj: DataView): S.SerializedDataView => {
-    return {__t: 'DataView', __v: {buffer: spread(new Uint8Array(obj.buffer)), byteOffset: obj.byteOffset, byteLength: obj.byteLength}}
+  DataView: (o: DataView): S.SerializedDataView => {
+    return {__t: 'DataView', __v: {buffer: spread(new Uint8Array(o.buffer)), byteOffset: o.byteOffset, byteLength: o.byteLength}}
   },
-  ArrayBuffer: (obj: ArrayBuffer): S.SerializedArrayBuffer => {
-    return {__t: 'ArrayBuffer', __v: spread(new Uint8Array(obj))}
+  ArrayBuffer: (o: ArrayBuffer): S.SerializedArrayBuffer => {
+    return {__t: 'ArrayBuffer', __v: spread(new Uint8Array(o))}
   },
-  SharedArrayBuffer: (obj: SharedArrayBuffer): S.SerializedSharedArrayBuffer => {
-    return {__t: 'SharedArrayBuffer', __v: spread(new Uint8Array(obj))}
+  SharedArrayBuffer: (o: SharedArrayBuffer): S.SerializedSharedArrayBuffer => {
+    return {__t: 'SharedArrayBuffer', __v: spread(new Uint8Array(o))}
   },
-  Buffer: (obj: Buffer): S.SerializedBuffer => {
-    return {__t: 'Buffer', __v: spread(obj)}
+  Buffer: (o: Buffer): S.SerializedBuffer => {
+    return {__t: 'Buffer', __v: spread(o)}
   },
-  Int8Array: (obj: Int8Array): S.SerializedInt8Array => {
-    return {__t: 'Int8Array', __v: spread(obj)}
+  Int8Array: (o: Int8Array): S.SerializedInt8Array => {
+    return {__t: 'Int8Array', __v: spread(o)}
   },
-  Uint8Array: (obj: Uint8Array): S.SerializedUint8Array => {
-    return {__t: 'Uint8Array', __v: spread(obj)}
+  Uint8Array: (o: Uint8Array): S.SerializedUint8Array => {
+    return {__t: 'Uint8Array', __v: spread(o)}
   },
-  Uint8ClampedArray: (obj: Uint8ClampedArray): S.SerializedUint8ClampedArray => {
-    return {__t: 'Uint8ClampedArray', __v: spread(obj)}
+  Uint8ClampedArray: (o: Uint8ClampedArray): S.SerializedUint8ClampedArray => {
+    return {__t: 'Uint8ClampedArray', __v: spread(o)}
   },
-  Int16Array: (obj: Int16Array): S.SerializedInt16Array => {
-    return {__t: 'Int16Array', __v: spread(obj)}
+  Int16Array: (o: Int16Array): S.SerializedInt16Array => {
+    return {__t: 'Int16Array', __v: spread(o)}
   },
-  Uint16Array: (obj: Uint16Array): S.SerializedUint16Array => {
-    return {__t: 'Uint16Array', __v: spread(obj)}
+  Uint16Array: (o: Uint16Array): S.SerializedUint16Array => {
+    return {__t: 'Uint16Array', __v: spread(o)}
   },
-  Int32Array: (obj: Int32Array): S.SerializedInt32Array => {
-    return {__t: 'Int32Array', __v: spread(obj)}
+  Int32Array: (o: Int32Array): S.SerializedInt32Array => {
+    return {__t: 'Int32Array', __v: spread(o)}
   },
-  Uint32Array: (obj: Uint32Array): S.SerializedUint32Array => {
-    return {__t: 'Uint32Array', __v: spread(obj)}
+  Uint32Array: (o: Uint32Array): S.SerializedUint32Array => {
+    return {__t: 'Uint32Array', __v: spread(o)}
   },
-  Float32Array: (obj: Float32Array): S.SerializedFloat32Array => {
-    return {__t: 'Float32Array', __v: spread(obj)}
+  Float32Array: (o: Float32Array): S.SerializedFloat32Array => {
+    return {__t: 'Float32Array', __v: spread(o)}
   },
-  Float64Array: (obj: Float64Array): S.SerializedFloat64Array => {
-    return {__t: 'Float64Array', __v: spread(obj)}
+  Float64Array: (o: Float64Array): S.SerializedFloat64Array => {
+    return {__t: 'Float64Array', __v: spread(o)}
   },
-  BigInt64Array: (obj: BigInt64Array): S.SerializedBigInt64Array => {
-    return {__t: 'BigInt64Array', __v: spread(obj)}
+  BigInt64Array: (o: BigInt64Array): S.SerializedBigInt64Array => {
+    return {__t: 'BigInt64Array', __v: spread(o)}
   },
-  BigUint64Array: (obj: BigUint64Array): S.SerializedBigUint64Array => {
-    return {__t: 'BigUint64Array', __v: spread(obj)}
+  BigUint64Array: (o: BigUint64Array): S.SerializedBigUint64Array => {
+    return {__t: 'BigUint64Array', __v: spread(o)}
   },
-  Object: (obj: any): S.SerializedObject => {
-    const o: Record<any, any> = {}
-    for (const k in obj) {
-      o[k] = serialize(obj[k])
+  Object: (o: any): S.SerializedObject => {
+    const t: Record<any, any> = {}
+    for (const k in o) {
+      t[k] = serialize(o[k])
     }
-    return o
+    return t
   }
 }
 
 type SerializeFn = {
-  <T>(obj: T): Serialize<T>
+  <T>(o: T): Serialize<T>
 }
 
-export const serialize: SerializeFn = <T>(obj: T): Serialize<T> => {
+export const serialize: SerializeFn = <T>(o: T): Serialize<T> => {
   // @ts-ignore
-  const handler = serializer[what(obj)]
+  const handler = serializer[w(o)]
   if (!handler) {
-    throw new Error(`${getObjectName(obj)} can't be serialized.`)
+    throw new Error(`${g(o)} can't be serialized.`)
   }
-  return handler(obj)
+  return handler(o)
 }
 
-export const stringify = <T>(obj: T) => JSON.stringify(serialize(obj))
+export const stringify = <T>(o: T) => JSON.stringify(serialize(o))

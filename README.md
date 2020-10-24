@@ -1,14 +1,16 @@
 # serialify
 
-Extended object serializer/deserializer for Node.js and browser written with TypeScript.
+Extended object serializer/deserializer for Node.js and browser written in TypeScript.
 
-## Installation
+## Feature
 
-`npm install serialify`
+- **Minimal**: input any supported object, and get serialized/deserialized.
+- **Fast**: it's basically a recursive if statement.
+- **Tiny**: only 1.7kb of gzipped.
 
 ## Supported data types
 
-serialify can serialize many data types which is not supported by standard JSON.
+`serialify` can serialize many data types which is not supported by standard JSON!
 
 | type                | standard JSON               | serialify               |
 | ------------------- | --------------------------- | ----------------------- |
@@ -19,9 +21,9 @@ serialify can serialize many data types which is not supported by standard JSON.
 | `Array`             | ✅                          | ✅                      |
 | `Object`            | ✅                          | ✅                      |
 | `undefined`         | ❌                          | ✅                      |
+| `bigint`            | ❌                          | ✅                      |
 | `NaN`               | ❌                          | ✅                      |
 | `Infinity`          | ❌                          | ✅                      |
-| `bigint`            | ❌                          | ✅                      |
 | `Date`              | ❌                          | ✅                      |
 | `RegExp`            | ❌                          | ✅                      |
 | `Set`               | ❌                          | ✅                      |
@@ -43,6 +45,10 @@ serialify can serialize many data types which is not supported by standard JSON.
 | `Float64Array`      | ❌                          | ✅                      |
 | `BigInt64Array`     | ❌                          | ✅                      |
 | `BigUint64Array`    | ❌                          | ✅                      |
+
+## Installation
+
+`npm install serialify`
 
 ## Usage
 
