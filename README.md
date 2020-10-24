@@ -1,4 +1,4 @@
-# serialify
+# serialify [![Build Status](https://travis-ci.org/Yuhsak/serialify.svg?branch=main)](https://travis-ci.org/Yuhsak/serialify)
 
 Extended object serializer/deserializer for Node.js and browser written in TypeScript.
 
