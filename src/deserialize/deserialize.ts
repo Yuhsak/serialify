@@ -2,7 +2,7 @@ import {isNumber as n, what} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Deserialize} from './types'
-import type {Serialize} from '../serialize/types'
+import {DeserializeError} from './error'
 import {getObjectName as g} from '../util'
 
 export const deserializer = {
@@ -50,14 +50,14 @@ export const deserializer = {
   URLSearchParams: (o: S.SerializedURLSearchParams) => {
     return new URLSearchParams(o.__v)
   },
-  Map: (o: S.SerializedMap) => {
-    return new Map(o.__v.map(([k, v]) => [k, deserialize(v)]))
+  Map: (o: S.SerializedMap, p: string='o') => {
+    return new Map(o.__v.map(([k, v]) => [k, _deserialize(v, p+'.get("'+k+'")')]))
   },
-  Set: (o: S.SerializedSet) => {
-    return new Set(o.__v.map(v => deserialize(v)))
+  Set: (o: S.SerializedSet, p: string='o') => {
+    return new Set(o.__v.map((v,i) => _deserialize(v, p+'['+i+']')))
   },
-  Array: (o: S.SerializedArray) => {
-    return o.map(v => deserialize(v))
+  Array: (o: S.SerializedArray, p: string='o') => {
+    return o.map((v,i) => _deserialize(v, p+'['+i+']'))
   },
   DataView: (o: S.SerializedDataView) => {
     return new DataView(new Uint8Array(o.__v.buffer).buffer, o.__v.byteOffset, o.__v.byteLength)
@@ -101,10 +101,10 @@ export const deserializer = {
   BigUint64Array: (o: S.SerializedBigUint64Array) => {
     return new BigUint64Array(o.__v.map(v => BigInt(v)))
   },
-  Object: (o: S.SerializedObject): any => {
+  Object: (o: S.SerializedObject, p: string='o'): any => {
     const t: Record<any, any> = {}
     for (const k in o) {
-      t[k] = deserialize(o[k])
+      t[k] = _deserialize(o[k], p+'.'+k)
     }
     return t
   }
@@ -132,18 +132,18 @@ type DeserializeFn = {
   <T>(o: T): Deserialize<T>
 }
 
-export const deserialize: DeserializeFn = <T>(o: T): Deserialize<T> => {
-
+const _deserialize = <T>(o: T, p: string): Deserialize<T> => {
   // @ts-ignore
   const f = deserializer[gt(o)]
 
   if (!f) {
-    throw new Error(`${g(o)} can't be deserialized.`)
+    throw new DeserializeError(`${g(o)} can't be deserialized.`, p)
   }
 
-  return f(o)
-
+  return f(o, p)
 }
+
+export const deserialize: DeserializeFn = <T>(o: T): Deserialize<T> => _deserialize(o, 'o')
 
 type ParseFn = {
   <T=any>(o: string, reviver?: (this: any, key: string, value: any) => any): T

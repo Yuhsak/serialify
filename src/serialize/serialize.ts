@@ -2,6 +2,7 @@ import {what as w} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Serialize} from './types'
+import {SerializeError} from './error'
 import {getObjectName as g} from '../util'
 
 function spread(o: Buffer | S.TypedArray): number[]
@@ -55,16 +56,16 @@ export const serializer = {
   URLSearchParams: (o: URLSearchParams): S.SerializedURLSearchParams => {
     return {__t: 'URLSearchParams', __v: o.toString()}
   },
-  Map: (o: Map<any, any>): S.SerializedMap => {
+  Map: (o: Map<any, any>, p: string='o'): S.SerializedMap => {
     const keys = [...o.keys()]
-    return {__t: 'Map', __v: keys.map(key => [key, serialize(o.get(key))])}
+    return {__t: 'Map', __v: keys.map(key => [key, _serialize(o.get(key), p+'.get("'+key+'")')])}
   },
-  Set: (o: Set<any>): S.SerializedSet => {
-    const values = [...o.values()].map(v => serialize(v))
+  Set: (o: Set<any>, p: string='o'): S.SerializedSet => {
+    const values = [...o.values()].map((v,i) => _serialize(v, p+'['+i+']'))
     return {__t: 'Set', __v: values}
   },
-  Array: (o: any[]): S.SerializedArray => {
-    return o.map(v => serialize(v))
+  Array: (o: any[], p: string='o'): S.SerializedArray => {
+    return o.map((v,i) => _serialize(v, p+'['+i+']'))
   },
   DataView: (o: DataView): S.SerializedDataView => {
     return {__t: 'DataView', __v: {buffer: spread(new Uint8Array(o.buffer)), byteOffset: o.byteOffset, byteLength: o.byteLength}}
@@ -108,10 +109,10 @@ export const serializer = {
   BigUint64Array: (o: BigUint64Array): S.SerializedBigUint64Array => {
     return {__t: 'BigUint64Array', __v: spread(o)}
   },
-  Object: (o: any): S.SerializedObject => {
+  Object: (o: any, path: string='o'): S.SerializedObject => {
     const t: Record<any, any> = {}
     for (const k in o) {
-      t[k] = serialize(o[k])
+      t[k] = _serialize(o[k], path+'.'+k)
     }
     return t
   }
@@ -121,14 +122,16 @@ type SerializeFn = {
   <T>(o: T): Serialize<T>
 }
 
-export const serialize: SerializeFn = <T>(o: T): Serialize<T> => {
+const _serialize = <T>(o: T, p: string): Serialize<T> => {
   // @ts-ignore
-  const handler = serializer[w(o)]
-  if (!handler) {
-    throw new Error(`${g(o)} can't be serialized.`)
+  const f = serializer[w(o)]
+  if (!f) {
+    throw new SerializeError(`${g(o)} can't be serialized.`, p)
   }
-  return handler(o)
+  return f(o, p)
 }
+
+export const serialize: SerializeFn = <T>(o: T): Serialize<T> => _serialize(o, 'o')
 
 type StringifyFn = {
   <T>(o: T, replacer ?: (this: any, key: string, value: any) => any, space ?: string | number): string
