@@ -2,6 +2,7 @@ import {isNumber as n, what} from 'what-is-that'
 
 import type * as S from '../types'
 import type {Deserialize} from './types'
+import type {Serialize} from '../serialize/types'
 import {getObjectName as g} from '../util'
 
 export const deserializer = {
@@ -131,7 +132,7 @@ type DeserializeFn = {
   <T>(o: T): Deserialize<T>
 }
 
-export const deserialize: DeserializeFn = (o: any): any => {
+export const deserialize: DeserializeFn = <T>(o: T): Deserialize<T> => {
 
   // @ts-ignore
   const f = deserializer[gt(o)]
@@ -144,4 +145,8 @@ export const deserialize: DeserializeFn = (o: any): any => {
 
 }
 
-export const parse = (o: string): any => deserialize(JSON.parse(o))
+type ParseFn = {
+  <T=any>(o: string, reviver?: (this: any, key: string, value: any) => any): T
+}
+
+export const parse: ParseFn = (o: string, reviver?: (this: any, key: string, value: any) => any): any => deserialize(JSON.parse(o, reviver))

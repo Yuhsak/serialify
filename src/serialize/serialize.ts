@@ -130,4 +130,9 @@ export const serialize: SerializeFn = <T>(o: T): Serialize<T> => {
   return handler(o)
 }
 
-export const stringify = <T>(o: T) => JSON.stringify(serialize(o))
+type StringifyFn = {
+  <T>(o: T, replacer ?: (this: any, key: string, value: any) => any, space ?: string | number): string
+  <T>(o: T, replacer?: (number | string)[] | null, space?: string | number): string
+}
+
+export const stringify: StringifyFn = <T>(o: T, replacer?: any, space?: any) => JSON.stringify(serialize(o), replacer, space)
