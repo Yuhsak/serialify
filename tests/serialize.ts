@@ -1,9 +1,30 @@
 import {
   serialize,
+  serializer,
   stringify,
 } from '../src/serialize'
 
 import type * as T from '../src/types'
+
+describe('serializer', () => {
+
+  test('Array', () => {
+    expect(serializer.Array([])).toStrictEqual([])
+  })
+
+  test('Object', () => {
+    expect(serializer.Object({})).toStrictEqual({})
+  })
+
+  test('Set', () => {
+    expect(serializer.Set(new Set())).toStrictEqual({__t: 'Set', __v: []})
+  })
+
+  test('Map', () => {
+    expect(serializer.Map(new Map())).toStrictEqual({__t: 'Map', __v: []})
+  })
+
+})
 
 describe('serialize', () => {
 

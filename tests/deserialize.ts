@@ -10,6 +10,26 @@ import {
 
 import * as T from '../src/types'
 
+describe('deserializer', () => {
+
+  test('Array', () => {
+    expect(deserializer.Array([])).toStrictEqual([])
+  })
+
+  test('Object', () => {
+    expect(deserializer.Object({})).toStrictEqual({})
+  })
+
+  test('Set', () => {
+    expect(deserializer.Set({__t: 'Set', __v: []}).size).toBe(0)
+  })
+
+  test('Map', () => {
+    expect(deserializer.Map({__t: 'Map', __v: []}).size).toBe(0)
+  })
+
+})
+
 describe('deserialize', () => {
 
   test('Number', () => {
