@@ -143,7 +143,7 @@ const _deserialize = <T>(o: T, p: string): Deserialize<T> => {
   return f(o, p)
 }
 
-export const deserialize: DeserializeFn = <T>(o: T): Deserialize<T> => _deserialize(o, 'o')
+export const deserialize: DeserializeFn = <T>(o: T): Deserialize<T> => _deserialize(o, 'root')
 
 type ParseFn = {
   <T=any>(o: string, reviver?: (this: any, key: string, value: any) => any): T

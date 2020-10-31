@@ -131,7 +131,7 @@ const _serialize = <T>(o: T, p: string): Serialize<T> => {
   return f(o, p)
 }
 
-export const serialize: SerializeFn = <T>(o: T): Serialize<T> => _serialize(o, 'o')
+export const serialize: SerializeFn = <T>(o: T): Serialize<T> => _serialize(o, 'root')
 
 type StringifyFn = {
   <T>(o: T, replacer ?: (this: any, key: string, value: any) => any, space ?: string | number): string
