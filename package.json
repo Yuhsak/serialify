@@ -1,6 +1,6 @@
 {
   "name": "serialify",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "Extended object serializer/deserializer for node.js written with TypeScript",
   "author": {
     "name": "Yuhsak Inoue",
